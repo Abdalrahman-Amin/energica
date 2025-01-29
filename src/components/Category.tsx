@@ -61,7 +61,7 @@ const Category: React.FC<CategoryProps> = ({ categoryId }) => {
    }, [categoryId]);
 
    return (
-      <div className="category-container mt-7">
+      <div className="category-container mt-7 mb-7">
          {category && (
             <div className="space-y-4">
                {/* Category Title */}

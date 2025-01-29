@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ModelCard from "./ModelCard";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface Model {
    id: number;
@@ -60,15 +61,15 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
             <div className="absolute -bottom-8 right-0 flex gap-2 p-2">
                <button
                   onClick={scrollLeft}
-                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition"
+                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100 "
                >
-                  &larr;
+                  <FaArrowLeft />
                </button>
                <button
                   onClick={scrollRight}
-                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition"
+                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100"
                >
-                  &rarr;
+                  <FaArrowRight />
                </button>
             </div>
          )}
