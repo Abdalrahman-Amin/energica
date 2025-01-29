@@ -57,7 +57,7 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
          </div>
          {/* Scroll Buttons (Conditional Rendering) */}
          {hasOverflow && (
-            <div className="absolute -bottom-6 right-0 flex gap-2 p-2">
+            <div className="absolute -bottom-8 right-0 flex gap-2 p-2">
                <button
                   onClick={scrollLeft}
                   className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition"
