@@ -2,22 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import ModelList from "./ModelList";
-
-interface Category {
-   id: number;
-   created_at: string;
-   slug: string;
-   title: string;
-}
-
-interface Model {
-   id: number;
-   created_at: string;
-   slug: string;
-   title: string;
-   description: string;
-   image: string;
-}
+import { Category as categoryType } from "@/types/types";
+import { Model } from "@/types/types";
 
 // interface Product {
 //     id: number;
@@ -32,23 +18,15 @@ interface Model {
 // }
 
 interface CategoryProps {
-   categoryId: number;
+   category: categoryType;
 }
 
-const Category: React.FC<CategoryProps> = ({ categoryId }) => {
-   const [category, setCategory] = useState<Category | null>(null);
+const Category: React.FC<CategoryProps> = ({ category }) => {
+   // const [category, setCategory] = useState<Category | null>(null);
    const [models, setModels] = useState<Model[]>([]);
 
    useEffect(() => {
       // Using random data for now
-      const randomCategory: Category = {
-         id: categoryId,
-         created_at: new Date().toISOString(),
-         slug: `category-${categoryId}`,
-         title: `Category ${categoryId}`,
-      };
-      setCategory(randomCategory);
-
       const randomModels: Model[] = Array.from({ length: 3 }, (_, i) => ({
          id: i + 1,
          created_at: new Date().toISOString(),
@@ -58,14 +36,14 @@ const Category: React.FC<CategoryProps> = ({ categoryId }) => {
          image: `https://picsum.photos/200/300`,
       }));
       setModels(randomModels);
-   }, [categoryId]);
+   }, []);
 
    return (
       <div className="category-container mt-7 mb-7">
          {category && (
-            <div className="space-y-4">
+            <div className="space-y-4 pt-5">
                {/* Category Title */}
-               <h2 className="text-2xl font-bold text-gray-900">
+               <h2 className="text-2xl font-bold text-gray-900 text-center">
                   {category.title}
                </h2>
 

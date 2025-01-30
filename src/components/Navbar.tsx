@@ -4,23 +4,58 @@ import Image from "next/image";
 import logo from "../../public/next.svg";
 import searchIcon from "../../public/icons-search.svg";
 import phoneIcon from "../../public/phone.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa6";
 import Link from "next/link";
 
-function Navbar() {
-   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+interface Category {
+   id: number;
+   title: string;
+}
 
-   const buttons = [
-      { name: "Batteries", onclick: () => {}, path: "/batteries" },
-      { name: "UPS", onclick: () => {}, path: "/ups" },
-      { name: "Inverters", onclick: () => {}, path: "/inverters" },
-      { name: "AVR", onclick: () => {}, path: "/avr" },
-   ];
+interface NavbarProps {
+   categories: Category[];
+}
+
+function Navbar({ categories }: NavbarProps) {
+   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+   const [activeSection, setActiveSection] = useState<number | null>(null);
+
+   const handleScroll = (id: number) => {
+      const section = document.getElementById(`category-${id}`);
+      if (section) {
+         section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+   };
+
+   useEffect(() => {
+      const handleScroll = () => {
+         let currentSection: number | null = null;
+         const navbarHeight =
+            document.querySelector("header")?.offsetHeight || 0;
+
+         categories.forEach((category) => {
+            const section = document.getElementById(`category-${category.id}`);
+            if (section) {
+               const rect = section.getBoundingClientRect();
+               if (rect.top <= navbarHeight && rect.bottom >= navbarHeight) {
+                  currentSection = category.id;
+               }
+            }
+         });
+
+         setActiveSection(currentSection);
+      };
+
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+         window.removeEventListener("scroll", handleScroll);
+      };
+   }, [categories]);
 
    return (
-      <header className="sticky top-0 z-10 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 drop-shadow-lg">
+      <header className="sticky top-0 z-10 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 drop-shadow-lg h-48">
          {/* Top Section */}
          <div className="flex flex-row items-center gap-3 justify-between w-full">
             {/* Logo */}
@@ -41,7 +76,7 @@ function Navbar() {
             </div>
 
             {/* Phone Number */}
-            <div className=" flex-row items-center justify-center gap-3 bg-blue-50 p-2 rounded-lg hover:bg-blue-100 transition-colors duration-300 hidden md:flex">
+            <div className="flex-row items-center justify-center gap-3 bg-blue-50 p-2 rounded-lg hover:bg-blue-100 transition-colors duration-300 hidden md:flex">
                <Image className="w-4 md:w-6" src={phoneIcon} alt="phone-icon" />
                <p className="text-gray-700 font-medium">01012731091</p>
             </div>
@@ -54,7 +89,7 @@ function Navbar() {
                onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
                aria-expanded={isNavMenuOpen}
                aria-label="Toggle navigation menu"
-               className="cursor-pointer w-8 p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-300 flex items-center justify-center "
+               className="cursor-pointer w-8 p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-300 flex items-center justify-center"
             >
                {isNavMenuOpen ? (
                   <FaXmark size={24} className="text-blue-600" />
@@ -80,13 +115,20 @@ function Navbar() {
 
          {/* Bottom Section - Navigation Buttons (Always Visible) */}
          <div className="flex flex-row items-center gap-4 justify-center w-full">
-            {buttons.map((btn) => (
-               <Link href={btn.path} key={btn.name}>
-                  <button className="px-4 py-2 rounded-md bg-blue-50 text-blue-600 font-medium hover:bg-blue-100 hover:text-blue-700 hover:scale-105 transition-all duration-300">
-                     {btn.name}
+            {categories &&
+               categories.map((category) => (
+                  <button
+                     key={category.id}
+                     onClick={() => handleScroll(category.id)}
+                     className={`px-4 py-2 rounded-md font-medium transition-all duration-300 ${
+                        activeSection === category.id
+                           ? "bg-blue-600 text-white"
+                           : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                     }`}
+                  >
+                     {category.title}
                   </button>
-               </Link>
-            ))}
+               ))}
          </div>
       </header>
    );
