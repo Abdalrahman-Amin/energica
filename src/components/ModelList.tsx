@@ -37,20 +37,20 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
 
    const scrollLeft = () => {
       if (containerRef.current) {
-         containerRef.current.scrollBy({ left: -200, behavior: "smooth" });
+         containerRef.current.scrollBy({ left: -400, behavior: "smooth" });
       }
    };
 
    const scrollRight = () => {
       if (containerRef.current) {
-         containerRef.current.scrollBy({ left: 200, behavior: "smooth" });
+         containerRef.current.scrollBy({ left: 400, behavior: "smooth" });
       }
    };
    return (
       <div className="relative">
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-4 py-4 md:justify-center hide-scrollbar"
+            className="models flex overflow-x-auto gap-4 py-4  hide-scrollbar"
          >
             {models.map((model) => (
                <ModelCard key={model.id} model={model} />
@@ -58,19 +58,21 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
          </div>
          {/* Scroll Buttons (Conditional Rendering) */}
          {hasOverflow && (
-            <div className="absolute -bottom-8 right-0 flex gap-2 p-2">
-               <button
-                  onClick={scrollLeft}
-                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100 "
-               >
-                  <FaArrowLeft />
-               </button>
-               <button
-                  onClick={scrollRight}
-                  className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100"
-               >
-                  <FaArrowRight />
-               </button>
+            <div className="absolute -bottom-8 flex justify-center align-middle w-full">
+               <div className=" flex gap-2 p-2">
+                  <button
+                     onClick={scrollLeft}
+                     className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100 "
+                  >
+                     <FaArrowLeft />
+                  </button>
+                  <button
+                     onClick={scrollRight}
+                     className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100"
+                  >
+                     <FaArrowRight />
+                  </button>
+               </div>
             </div>
          )}
       </div>

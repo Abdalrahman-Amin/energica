@@ -54,7 +54,7 @@ export default function RootLayout({
    return (
       <html lang="en" dir="ltr">
          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
          >
             <Navbar categories={categories} />
             {children}

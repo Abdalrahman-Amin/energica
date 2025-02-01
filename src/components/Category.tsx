@@ -5,18 +5,6 @@ import ModelList from "./ModelList";
 import { Category as categoryType } from "@/types/types";
 import { Model } from "@/types/types";
 
-// interface Product {
-//     id: number;
-//     created_at: string;
-//     title: string;
-//     image: string;
-//     description: string;
-//     price: number;
-//     currency: string;
-//     category: number;
-//     model: number;
-// }
-
 interface CategoryProps {
    category: categoryType;
 }
@@ -39,9 +27,12 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
    }, []);
 
    return (
-      <div className="category-container mt-7 mb-7">
+      <>
          {category && (
-            <div className="space-y-4 pt-5">
+            <section
+               className="space-y-4 mt-2 custom-height pt-8"
+               id={`category-${category.id}`}
+            >
                {/* Category Title */}
                <h2 className="text-2xl font-bold text-gray-900 text-center">
                   {category.title}
@@ -49,9 +40,9 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
 
                {/* Model List */}
                <ModelList models={models} />
-            </div>
+            </section>
          )}
-      </div>
+      </>
    );
 };
 

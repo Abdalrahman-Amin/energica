@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "../../public/next.svg";
 import searchIcon from "../../public/icons-search.svg";
 import phoneIcon from "../../public/phone.svg";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa6";
 import Link from "next/link";
@@ -22,40 +22,47 @@ function Navbar({ categories }: NavbarProps) {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<number | null>(null);
 
-   const handleScroll = (id: number) => {
-      const section = document.getElementById(`category-${id}`);
-      if (section) {
-         section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-   };
+   const handleScroll = useCallback(() => {
+      let currentSection: number | null = null;
+      const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
+
+      categories.forEach((category) => {
+         const section = document.getElementById(`category-${category.id}`);
+         if (section) {
+            const rect = section.getBoundingClientRect();
+            if (
+               rect.top <= navbarHeight + 100 &&
+               rect.bottom >= navbarHeight + 100
+            ) {
+               currentSection = category.id;
+            }
+         }
+      });
+
+      setActiveSection(currentSection);
+   }, [categories]);
 
    useEffect(() => {
-      const handleScroll = () => {
-         let currentSection: number | null = null;
-         const navbarHeight =
-            document.querySelector("header")?.offsetHeight || 0;
-
-         categories.forEach((category) => {
-            const section = document.getElementById(`category-${category.id}`);
-            if (section) {
-               const rect = section.getBoundingClientRect();
-               if (rect.top <= navbarHeight && rect.bottom >= navbarHeight) {
-                  currentSection = category.id;
-               }
-            }
-         });
-
-         setActiveSection(currentSection);
-      };
-
       window.addEventListener("scroll", handleScroll);
       return () => {
          window.removeEventListener("scroll", handleScroll);
       };
-   }, [categories]);
+   }, [handleScroll]);
+
+   const handleCategoryClick = (categoryId: number) => {
+      const section = document.getElementById(`category-${categoryId}`);
+      const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
+
+      if (section) {
+         window.scrollTo({
+            top: section.offsetTop - navbarHeight,
+            behavior: "smooth",
+         });
+      }
+   };
 
    return (
-      <header className="sticky top-0 z-10 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 drop-shadow-lg h-48">
+      <header className="fixed w-full top-0 z-10 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 drop-shadow-lg h-48">
          {/* Top Section */}
          <div className="flex flex-row items-center gap-3 justify-between w-full">
             {/* Logo */}
@@ -119,7 +126,7 @@ function Navbar({ categories }: NavbarProps) {
                categories.map((category) => (
                   <button
                      key={category.id}
-                     onClick={() => handleScroll(category.id)}
+                     onClick={() => handleCategoryClick(category.id)}
                      className={`px-4 py-2 rounded-md font-medium transition-all duration-300 ${
                         activeSection === category.id
                            ? "bg-blue-600 text-white"
