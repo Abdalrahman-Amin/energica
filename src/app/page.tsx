@@ -31,7 +31,7 @@ const categories: categoryType[] = [
 
 export default function Home() {
    return (
-      <main className="mt-48">
+      <main className="mt-52">
          {categories.map((category) => (
             <Category key={category.id} category={category} />
          ))}

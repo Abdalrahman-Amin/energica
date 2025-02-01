@@ -27,22 +27,17 @@ const Category: React.FC<CategoryProps> = ({ category }) => {
    }, []);
 
    return (
-      <>
-         {category && (
-            <section
-               className="space-y-4 mt-2 custom-height pt-8"
-               id={`category-${category.id}`}
-            >
-               {/* Category Title */}
-               <h2 className="text-2xl font-bold text-gray-900 text-center">
-                  {category.title}
-               </h2>
-
-               {/* Model List */}
-               <ModelList models={models} />
-            </section>
-         )}
-      </>
+      category && (
+         <section
+            className="space-y-6 mt-6 custom-height pt-10 bg-white shadow-lg rounded-xl p-6"
+            id={`category-${category.id}`}
+         >
+            <h2 className="text-3xl font-bold text-purple-700 text-center">
+               {category.title}
+            </h2>
+            <ModelList models={models} />
+         </section>
+      )
    );
 };
 

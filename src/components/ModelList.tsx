@@ -37,38 +37,37 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
 
    const scrollLeft = () => {
       if (containerRef.current) {
-         containerRef.current.scrollBy({ left: -400, behavior: "smooth" });
+         containerRef.current.scrollBy({ left: -350, behavior: "smooth" });
       }
    };
 
    const scrollRight = () => {
       if (containerRef.current) {
-         containerRef.current.scrollBy({ left: 400, behavior: "smooth" });
+         containerRef.current.scrollBy({ left: 350, behavior: "smooth" });
       }
    };
    return (
       <div className="relative">
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-4 py-4  hide-scrollbar"
+            className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar justify-start pl-8 lg:justify-center"
          >
             {models.map((model) => (
                <ModelCard key={model.id} model={model} />
             ))}
          </div>
-         {/* Scroll Buttons (Conditional Rendering) */}
          {hasOverflow && (
-            <div className="absolute -bottom-8 flex justify-center align-middle w-full">
-               <div className=" flex gap-2 p-2">
+            <div className="absolute -bottom-8 flex justify-center w-full">
+               <div className="flex gap-2 p-2">
                   <button
                      onClick={scrollLeft}
-                     className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100 "
+                     className="w-10 h-10 bg-purple-500 text-white flex items-center justify-center rounded-full shadow-md hover:bg-purple-600 transition hover:scale-105"
                   >
                      <FaArrowLeft />
                   </button>
                   <button
                      onClick={scrollRight}
-                     className="w-8 h-8 bg-white bg-opacity-75 flex items-center justify-center rounded-lg shadow-md hover:bg-opacity-100 transition hover:scale-105 hover:bg-gray-100"
+                     className="w-10 h-10 bg-purple-500 text-white flex items-center justify-center rounded-full shadow-md hover:bg-purple-600 transition hover:scale-105"
                   >
                      <FaArrowRight />
                   </button>

@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import logo from "../../public/next.svg";
+import logo from "../../public/logo.png";
 import searchIcon from "../../public/icons-search.svg";
 import phoneIcon from "../../public/phone.svg";
 import { useCallback, useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa6";
 import Link from "next/link";
+import clsx from "clsx";
 
 interface Category {
    id: number;
@@ -15,10 +16,10 @@ interface Category {
 }
 
 interface NavbarProps {
-   categories: Category[];
+   categories?: Category[];
 }
 
-function Navbar({ categories }: NavbarProps) {
+function Navbar({ categories = [] }: NavbarProps) {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<number | null>(null);
 
@@ -62,41 +63,50 @@ function Navbar({ categories }: NavbarProps) {
    };
 
    return (
-      <header className="fixed w-full top-0 z-10 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 drop-shadow-lg h-48">
+      <header className="fixed w-full top-0 z-20 flex flex-col gap-4 items-center text-black py-4 px-4 bg-white md:px-8 lg:px-32 shadow-md h-56 transition-all duration-300">
          {/* Top Section */}
-         <div className="flex flex-row items-center gap-3 justify-between w-full">
+         <div className="flex flex-row items-center gap-4 justify-between w-full">
             {/* Logo */}
             <Link href="/">
                <Image
-                  height={40}
+                  height={100}
                   src={logo}
                   alt="logo"
-                  className="hover:scale-105 transition-all duration-300 w-16 md:w-20 cursor-pointer"
+                  className="hover:scale-110 transition-transform duration-300 w-16 md:w-20 cursor-pointer"
                />
             </Link>
 
             {/* Title */}
-            <div>
-               <h1 className="text-2xl md:text-3xl font-bold text-blue-600 bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
-                  ENERGICA
-               </h1>
-            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-blue-700 bg-gradient-to-r from-blue-700 to-sky-500 bg-clip-text text-transparent">
+               ENERGICA
+            </h1>
 
-            {/* Phone Number */}
-            <div className="flex-row items-center justify-center gap-3 bg-blue-50 p-2 rounded-lg hover:bg-blue-100 transition-colors duration-300 hidden md:flex">
-               <Image className="w-4 md:w-6" src={phoneIcon} alt="phone-icon" />
-               <p className="text-gray-700 font-medium">01012731091</p>
+            {/* Contact & Admin Login */}
+            <div className="flex flex-row gap-4 items-center">
+               <div className="hidden md:flex flex-row items-center gap-3 bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-300">
+                  <Image
+                     className="w-5 md:w-6"
+                     src={phoneIcon}
+                     alt="phone-icon"
+                  />
+                  <p className="text-gray-700 font-medium">01012731091</p>
+               </div>
+               <Link href="/admin/login">
+                  <button className="px-5 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 shadow-md">
+                     Admin Login
+                  </button>
+               </Link>
             </div>
          </div>
 
          {/* Middle Section */}
-         <div className="flex flex-row items-center justify-between w-full gap-3">
-            {/* Hamburger Menu (Always Visible) */}
+         <div className="flex flex-row items-center justify-between w-full gap-4">
+            {/* Hamburger Menu */}
             <button
                onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
                aria-expanded={isNavMenuOpen}
                aria-label="Toggle navigation menu"
-               className="cursor-pointer w-8 p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-300 flex items-center justify-center"
+               className="w-10 h-10 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-300 flex items-center justify-center"
             >
                {isNavMenuOpen ? (
                   <FaXmark size={24} className="text-blue-600" />
@@ -106,7 +116,7 @@ function Navbar({ categories }: NavbarProps) {
             </button>
 
             {/* Search Bar */}
-            <div className="relative flex items-center justify-center gap-3 w-full sm:w-auto">
+            <div className="relative flex items-center w-full sm:w-auto">
                <Image
                   src={searchIcon}
                   alt="search"
@@ -120,22 +130,25 @@ function Navbar({ categories }: NavbarProps) {
             </div>
          </div>
 
-         {/* Bottom Section - Navigation Buttons (Always Visible) */}
+         {/* Bottom Section - Navigation Buttons */}
          <div className="flex flex-row items-center gap-4 justify-center w-full">
-            {categories &&
-               categories.map((category) => (
-                  <button
-                     key={category.id}
-                     onClick={() => handleCategoryClick(category.id)}
-                     className={`px-4 py-2 rounded-md font-medium transition-all duration-300 ${
-                        activeSection === category.id
-                           ? "bg-blue-600 text-white"
-                           : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
-                     }`}
-                  >
-                     {category.title}
-                  </button>
-               ))}
+            {categories.map((category) => (
+               <button
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.id)}
+                  className={clsx(
+                     "px-5 py-2 rounded-lg font-medium transition-all duration-300 shadow-md",
+                     activeSection === category.id
+                        ? "bg-blue-600 text-white shadow-lg"
+                        : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 hover:scale-105"
+                  )}
+                  aria-current={
+                     activeSection === category.id ? "page" : undefined
+                  }
+               >
+                  {category.title}
+               </button>
+            ))}
          </div>
       </header>
    );

@@ -15,16 +15,13 @@ interface ModelCardProps {
 
 const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
    return (
-      <div className="model-card flex h-64 w-96 flex-shrink-0 overflow-hidden border border-gray-200 rounded-lg shadow-sm">
-         {/* Text Content (Left Side) */}
-         <div className="flex-1 p-6 flex flex-col justify-center">
-            <h3 className="text-xl font-semibold text-gray-800">
+      <div className="model-card flex h-72 w-80 flex-shrink-0 overflow-hidden border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all">
+         <div className="flex-1 p-6 flex flex-col justify-center bg-gray-50">
+            <h3 className="text-xl font-semibold text-gray-900">
                {model.title}
             </h3>
-            <p className="text-base text-gray-600">{model.description}</p>
+            <p className="text-sm text-gray-600 mt-2">{model.description}</p>
          </div>
-
-         {/* Image (Right Side - Full Height) */}
          <div className="w-1/2 flex-shrink-0">
             <img
                src={model.image}
