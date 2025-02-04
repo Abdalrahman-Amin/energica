@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import BackButton from "@/components/BackButton";
 
 const AddCategoryForm = () => {
    const [title, setTitle] = useState("");
@@ -36,6 +37,9 @@ const AddCategoryForm = () => {
 
    return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 to-purple-200">
+         <div style={{ position: "absolute", top: "10px", left: "10px" }}>
+            <BackButton />
+         </div>
          <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-lg border border-gray-200">
             <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
                Add Category

@@ -1,6 +1,10 @@
+"use client";
+import { usePathname } from "next/navigation";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
+   const pathName = usePathname();
+   if(pathName.includes("admin")) return null
    return (
       <footer className="bg-gray-900 text-white py-12  w-full">
          <div className="container mx-auto px-4">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { Category } from "@/types/types";
+import BackButton from "@/components/BackButton";
 
 const AddModelForm = () => {
    const [categories, setCategories] = useState<Category[]>([]);
@@ -33,9 +34,10 @@ const AddModelForm = () => {
       path: string
    ) => {
       // Upload the PDF file to Supabase Storage
+      const uniqueFileName = `${Date.now()}-${file.name}`;
       const { data, error } = await supabase.storage
          .from(bucketName) // Bucket name   model-pdfs
-         .upload(path, file); // File path and file object  `pdfs/${file.name}`
+         .upload(`${path}/${uniqueFileName}`, file); // File path and file object  `pdfs/${file.name}`
 
       if (error) {
          console.error("Error uploading PDF:", error);
@@ -59,7 +61,7 @@ const AddModelForm = () => {
             const uploadResponse = await handlePdfUpload(
                pdfFile,
                "model-pdfs",
-               `pdfs/${pdfFile.name}`
+               `pdfs`
             );
             if (!uploadResponse) {
                alert("Failed to upload PDF.");
@@ -73,7 +75,7 @@ const AddModelForm = () => {
             const uploadResponse = await handlePdfUpload(
                image,
                "model-image-files",
-               `imgs/${image.name}`
+               `imgs`
             );
             if (!uploadResponse) {
                alert("Failed to upload img.");
@@ -113,7 +115,10 @@ const AddModelForm = () => {
    };
 
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-200 to-blue-200 mt-11">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-200 to-blue-200">
+         <div style={{ position: "absolute", top: "10px", left: "10px" }}>
+            <BackButton />
+         </div>
          <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-lg border border-gray-200">
             <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
                Add Model

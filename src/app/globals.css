@@ -17,6 +17,6 @@
    scroll-margin-top: 185px; /* Adjust this value to match the height of your navbar */
 }
 
-.custom-height {
+/* .custom-height {
    min-height: calc(100vh - 12rem);
-}
+} */

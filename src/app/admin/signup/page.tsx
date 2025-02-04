@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import BackButton from "@/components/BackButton";
 
 const SignUpPage = () => {
    const [email, setEmail] = useState("");
@@ -38,6 +39,9 @@ const SignUpPage = () => {
 
    return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+         <div style={{ position: "absolute", top: "10px", left: "10px" }}>
+            <BackButton />
+         </div>
          <h1 className="text-2xl font-bold mb-4">Admin Sign Up</h1>
          <form
             onSubmit={handleSignUp}
