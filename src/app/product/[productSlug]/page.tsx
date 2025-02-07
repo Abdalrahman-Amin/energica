@@ -45,7 +45,7 @@ const ProductPage = () => {
 
    const handleWhatsAppClick = () => {
       const message = `Hello, I'm interested in the product: ${product?.title}`;
-      const phoneNumber = "01012731091"; // Replace with your phone number
+      const phoneNumber = "+2001012731091"; // Replace with your phone number
       const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
          message
       )}`;
