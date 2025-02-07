@@ -40,7 +40,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
       category && (
          <section
             className="mt-6 pt-10 shadow-lg rounded-xl p-6"
-            id={`category-${category.id}`}
+            id={`category-${category.title}`}
          >
             <div className="flex justify-between items-center">
                <h2 className="text-3xl font-bold text-purple-700">
@@ -53,7 +53,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                   See all products
                </a>
             </div>
-            <ModelList models={models} />
+            <ModelList models={models} categorySlug={slug} />
          </section>
       )
    );

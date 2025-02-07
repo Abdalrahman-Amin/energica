@@ -13,9 +13,10 @@ interface Model {
 
 interface ModelListProps {
    models: Model[];
+   categorySlug: string;
 }
 
-const ModelList: React.FC<ModelListProps> = ({ models }) => {
+const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
    const containerRef = useRef<HTMLDivElement>(null);
    const [hasOverflow, setHasOverflow] = useState(false);
 
@@ -53,7 +54,11 @@ const ModelList: React.FC<ModelListProps> = ({ models }) => {
             className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar justify-start pl-8 lg:justify-center"
          >
             {models.map((model) => (
-               <ModelCard key={model.id} model={model} />
+               <ModelCard
+                  key={model.id}
+                  model={model}
+                  categorySlug={categorySlug}
+               />
             ))}
          </div>
          {hasOverflow && (

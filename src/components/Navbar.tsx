@@ -21,22 +21,22 @@ interface NavbarProps {
 
 function Navbar({ categories = [] }: NavbarProps) {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
-   const [activeSection, setActiveSection] = useState<number | null>(null);
+   const [activeSection, setActiveSection] = useState<string | null>(null);
    const pathname = usePathname();
 
    const handleScroll = useCallback(() => {
-      let currentSection: number | null = null;
+      let currentSection: string | null = null;
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
 
       categories.forEach((category) => {
-         const section = document.getElementById(`category-${category.id}`);
+         const section = document.getElementById(`category-${category.title}`);
          if (section) {
             const rect = section.getBoundingClientRect();
             if (
-               rect.top <= navbarHeight + 100 &&
+               rect.top <= navbarHeight + 500 &&
                rect.bottom >= navbarHeight + 100
             ) {
-               currentSection = category.id;
+               currentSection = category.title;
             }
          }
       });
@@ -51,13 +51,13 @@ function Navbar({ categories = [] }: NavbarProps) {
       };
    }, [handleScroll]);
 
-   const handleCategoryClick = (categoryId: number) => {
+   const handleCategoryClick = (categoryId: string) => {
       const section = document.getElementById(`category-${categoryId}`);
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
 
       if (section) {
          window.scrollTo({
-            top: section.offsetTop - navbarHeight,
+            top: section.offsetTop - navbarHeight - 100,
             behavior: "smooth",
          });
       }
@@ -130,14 +130,14 @@ function Navbar({ categories = [] }: NavbarProps) {
                {categories.map((category) => (
                   <button
                      key={category.id}
-                     onClick={() => handleCategoryClick(category.id)}
+                     onClick={() => handleCategoryClick(category.title)}
                      className={`px-5 py-2 rounded-lg font-medium transition-all duration-300 shadow-md ${
-                        activeSection === category.id
+                        activeSection === category.title
                            ? "bg-blue-600 text-white shadow-lg"
                            : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
                      }`}
                      aria-current={
-                        activeSection === category.id ? "page" : undefined
+                        activeSection === category.title ? "page" : undefined
                      }
                   >
                      {category.title}

@@ -27,12 +27,6 @@ export default function RootLayout({
 }>) {
    const categories: categoryType[] = [
       {
-         id: 1,
-         title: "Batteries",
-         slug: "batteries",
-         image: "https://picsum.photos/200/300",
-      },
-      {
          id: 2,
          title: "UPS",
          slug: "ups",
@@ -45,8 +39,14 @@ export default function RootLayout({
          image: "https://picsum.photos/200/300",
       },
       {
+         id: 1,
+         title: "Battiries",
+         slug: "batteries",
+         image: "https://picsum.photos/200/300",
+      },
+      {
          id: 4,
-         title: "AVR",
+         title: "Stabilizers",
          slug: "avr",
          image: "https://picsum.photos/200/300",
       },

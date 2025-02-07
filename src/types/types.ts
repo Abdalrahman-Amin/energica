@@ -26,8 +26,7 @@ export interface Product {
    title: string;
    image: string;
    description: string;
-   price: number;
-   currency: string;
    category: number;
    model: number;
+   slug: string;
 }
