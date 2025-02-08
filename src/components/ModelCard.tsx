@@ -14,12 +14,21 @@ interface Model {
 interface ModelCardProps {
    model: Model;
    categorySlug: string;
+   className?: string;
 }
 
-const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
+const ModelCard: React.FC<ModelCardProps> = ({
+   model,
+   categorySlug,
+   className,
+}) => {
    return (
-      <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
-         <div className="model-card flex flex-col lg:flex-row h-auto w-full max-w-md lg:max-w-lg flex-shrink-0 overflow-hidden border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 bg-white">
+      <Link
+         href={`/category/${categorySlug}/${model.slug}`}
+         passHref
+         className={className}
+      >
+         <div className=" model-card flex flex-col lg:flex-row h-full w-screen max-w-md lg:max-w-lg  overflow-hidden border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 bg-white">
             {/* Image Section */}
             <div className="w-full lg:w-1/2 flex-shrink-0 relative h-48 lg:h-auto">
                <Image

@@ -18,66 +18,88 @@ interface ModelListProps {
 
 const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
    const containerRef = useRef<HTMLDivElement>(null);
-   const [hasOverflow, setHasOverflow] = useState(false);
+   const [canScrollLeft, setCanScrollLeft] = useState(false);
+   const [canScrollRight, setCanScrollRight] = useState(false);
+   const [cardWidth, setCardWidth] = useState(0);
+   const gap = 24; // Adjust based on Tailwind gap-6 (6 * 4px)
 
-   // Check for overflow on mount and when models change
-   useEffect(() => {
-      const checkOverflow = () => {
-         if (containerRef.current) {
-            const hasHorizontalOverflow =
-               containerRef.current.scrollWidth >
-               containerRef.current.clientWidth;
-            setHasOverflow(hasHorizontalOverflow);
+   // Check for overflow and update scroll button visibility
+   const checkOverflow = () => {
+      if (containerRef.current) {
+         const { scrollWidth, clientWidth, scrollLeft } = containerRef.current;
+
+         // Determine scrollable sides
+         const canScrollLeftNow = scrollLeft > 0;
+         const canScrollRightNow = scrollLeft + clientWidth < scrollWidth - 1;
+
+         setCanScrollLeft(canScrollLeftNow);
+         setCanScrollRight(canScrollRightNow);
+
+         // Calculate the width of the first card
+         const firstCard = containerRef.current.querySelector(".model-card");
+         if (firstCard) {
+            setCardWidth(firstCard.clientWidth + gap);
          }
-      };
+      }
+   };
 
+   useEffect(() => {
       checkOverflow();
       window.addEventListener("resize", checkOverflow);
       return () => window.removeEventListener("resize", checkOverflow);
    }, [models]);
 
    const scrollLeft = () => {
-      if (containerRef.current) {
-         containerRef.current.scrollBy({ left: -350, behavior: "smooth" });
+      if (containerRef.current && cardWidth > 0) {
+         containerRef.current.scrollBy({
+            left: -cardWidth,
+            behavior: "smooth",
+         });
       }
    };
 
    const scrollRight = () => {
-      if (containerRef.current) {
-         containerRef.current.scrollBy({ left: 350, behavior: "smooth" });
+      if (containerRef.current && cardWidth > 0) {
+         containerRef.current.scrollBy({ left: cardWidth, behavior: "smooth" });
       }
    };
+
    return (
       <div className="relative">
+         {/* Scrollable Cards */}
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar justify-start pl-8 lg:justify-center"
+            className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar bg-slate-100 scroll-smooth"
+            onScroll={checkOverflow}
          >
             {models.map((model) => (
                <ModelCard
                   key={model.id}
                   model={model}
                   categorySlug={categorySlug}
+                  className="model-card"
                />
             ))}
          </div>
-         {hasOverflow && (
-            <div className="absolute -bottom-8 flex justify-center w-full">
-               <div className="flex gap-2 p-2">
-                  <button
-                     onClick={scrollLeft}
-                     className="w-10 h-10 bg-purple-500 text-white flex items-center justify-center rounded-full shadow-md hover:bg-purple-600 transition hover:scale-105"
-                  >
-                     <FaArrowLeft />
-                  </button>
-                  <button
-                     onClick={scrollRight}
-                     className="w-10 h-10 bg-purple-500 text-white flex items-center justify-center rounded-full shadow-md hover:bg-purple-600 transition hover:scale-105"
-                  >
-                     <FaArrowRight />
-                  </button>
-               </div>
-            </div>
+
+         {/* Left Scroll Button */}
+         {canScrollLeft && (
+            <button
+               onClick={scrollLeft}
+               className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            >
+               <FaArrowLeft className="w-6 h-6" />
+            </button>
+         )}
+
+         {/* Right Scroll Button */}
+         {canScrollRight && (
+            <button
+               onClick={scrollRight}
+               className="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            >
+               <FaArrowRight className="w-6 h-6" />
+            </button>
          )}
       </div>
    );
