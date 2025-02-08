@@ -48,7 +48,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                   {category.title}
                </h2>
                <a
-                  href={`/products?category=${slug}`}
+                  href={`/category/${slug}/products`}
                   className="text-lg text-blue-600 font-medium hover:text-blue-700 hover:underline transition-all duration-200"
                >
                   See all products →

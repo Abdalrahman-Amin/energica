@@ -7,7 +7,8 @@ import phoneIcon from "../../public/phone.svg";
 import { useCallback, useEffect, useState } from "react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface Category {
    id: number;
@@ -21,7 +22,66 @@ interface NavbarProps {
 function Navbar({ categories = [] }: NavbarProps) {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<string | null>(null);
+   const [searchResults, setSearchResults] = useState<
+      { id: number; title: string; slug: string; type: string }[]
+   >([]);
+   const [searchQuery, setSearchQuery] = useState("");
+   const supabase = createClientComponentClient();
    const pathname = usePathname();
+   const router = useRouter();
+
+   const handleSearch = async (query: string) => {
+      if (query.length > 2) {
+         const { data: products, error: productsError } = await supabase
+            .from("products")
+            .select("id, title, slug")
+            .ilike("title", `%${query}%`);
+
+         // const { data: models, error: modelsError } = await supabase
+         //    .from("models")
+         //    .select("id, title, slug")
+         //    .ilike("title", `%${query}%`);
+
+         // const { data: categories, error: categoriesError } = await supabase
+         //    .from("categories")
+         //    .select("id, title, slug")
+         //    .ilike("title", `%${query}%`);
+
+         if (productsError) {
+            console.error("Error fetching search results:", productsError);
+            return;
+         }
+
+         setSearchResults([
+            ...products.map((product) => ({ ...product, type: "product" })),
+            // ...models.map((model) => ({ ...model, type: "model" })),
+            // ...categories.map((category) => ({
+            //    ...category,
+            //    type: "category",
+            // })),
+         ]);
+      } else {
+         setSearchResults([]);
+      }
+   };
+
+   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+      handleSearch(query);
+   };
+
+   const handleSearchResultClick = (slug: string) => {
+      // if (type === "product") {
+      router.push(`/product/${slug}`);
+      // } else if (type === "model") {
+      //    router.push(`/model/${slug}`);
+      // } else if (type === "category") {
+      //    router.push(`/category/${slug}`);
+      // }
+      setSearchQuery("");
+      setSearchResults([]);
+   };
 
    // Scroll to category section
    const handleCategoryClick = (categoryId: string) => {
@@ -106,10 +166,25 @@ function Navbar({ categories = [] }: NavbarProps) {
                   className="absolute left-3 w-5 text-gray-400"
                />
                <input
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  placeholder="Search for products, models, or categories..."
                   type="text"
-                  placeholder="Search..."
                   className="py-2 pl-10 pr-4 w-full rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
                />
+               {searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10">
+                     {searchResults.map((result) => (
+                        <div
+                           key={result.id}
+                           onClick={() => handleSearchResultClick(result.slug)}
+                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                           {result.title}
+                        </div>
+                     ))}
+                  </div>
+               )}
             </div>
 
             {/* Contact Info (Desktop Only) */}
