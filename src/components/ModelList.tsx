@@ -1,15 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ModelCard from "./ModelCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
-interface Model {
-   id: number;
-   created_at: string;
-   slug: string;
-   title: string;
-   description: string;
-   image: string;
-}
+import { Model } from "@/types/types";
 
 interface ModelListProps {
    models: Model[];
@@ -77,7 +69,6 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
                   key={model.id}
                   model={model}
                   categorySlug={categorySlug}
-                  className="model-card"
                />
             ))}
          </div>

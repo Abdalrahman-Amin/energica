@@ -22,9 +22,13 @@ export default function Home() {
    }, [supabase]);
 
    return (
-      <main className="mt-52">
+      <main className="mt-52 min-h-screen">
          {categories.map((category) => (
-            <Category key={category.id} category={category} slug={category.slug} />
+            <Category
+               key={category.id}
+               category={category}
+               slug={category.slug}
+            />
          ))}
       </main>
    );

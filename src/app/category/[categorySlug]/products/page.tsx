@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Product, Model } from "@/types/types";
 import Image from "next/image";
+import Loader from "@/components/Loader";
 
 const CategoryProductsPage = () => {
    const { categorySlug } = useParams();
@@ -71,11 +72,7 @@ const CategoryProductsPage = () => {
    }, [categorySlug, supabase]);
 
    if (isLoading) {
-      return (
-         <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-         </div>
-      );
+      return <Loader size="lg" />;
    }
 
    if (error) {

@@ -5,6 +5,7 @@ import ModelList from "./ModelList";
 import { Category as categoryType } from "@/types/types";
 import { Model } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Loader from "./Loader";
 
 interface CategoryProps {
    category: categoryType;
@@ -13,33 +14,53 @@ interface CategoryProps {
 
 const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    const [models, setModels] = useState<Model[]>([]);
+   const [isLoading, setIsLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
    const supabase = createClientComponentClient();
 
    useEffect(() => {
       const fetchModels = async () => {
-         const { data, error } = await supabase
-            .from("category_models")
-            .select("models(*)")
-            .eq("category_id", category.id);
+         try {
+            const { data, error } = await supabase
+               .from("category_models")
+               .select("models(*)")
+               .eq("category_id", category.id);
 
-         if (error) {
-            console.error("Error fetching models:", error);
-         } else {
+            if (error) {
+               throw error;
+            }
+
             const modelsData = data.flatMap(
                (item: { models: Model[] }) => item.models
             );
-            console.log("DEBUG: ~ fetchModels ~ modelsData:", modelsData);
             setModels(modelsData || []);
+         } catch (error) {
+            console.error("Error fetching models:", error);
+            setError("Failed to fetch models. Please try again later.");
+         } finally {
+            setIsLoading(false);
          }
       };
 
       fetchModels();
    }, [category.id, supabase]);
 
+   if (isLoading) {
+      return <Loader size="lg" />;
+   }
+
+   if (error) {
+      return (
+         <div className="flex justify-center items-center h-screen">
+            <p className="text-red-500 text-lg">{error}</p>
+         </div>
+      );
+   }
+
    return (
       category && (
          <section
-            className="mt-6 pt-10 pb-6 px-6 bg-white shadow-xl rounded-2xl border border-gray-200 transition-all duration-300 hover:shadow-2xl"
+            className="mt-6 pt-10 pb-6 px-6 bg-white shadow-xl rounded-2xl border border-gray-200 transition-all duration-300 ease-in-out transform hover:-translate-y-1"
             id={`category-${category.title}`}
          >
             {/* Header: Category Title + Link */}

@@ -9,6 +9,7 @@ import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import clsx from "clsx";
 
 interface Category {
    id: number;
@@ -28,6 +29,7 @@ function Navbar({ categories = [] }: NavbarProps) {
    const [searchQuery, setSearchQuery] = useState("");
    const supabase = createClientComponentClient();
    const pathname = usePathname();
+   console.log("DEBUG: ~ Navbar ~ pathname:", pathname);
    const router = useRouter();
 
    const handleSearch = async (query: string) => {
@@ -37,16 +39,6 @@ function Navbar({ categories = [] }: NavbarProps) {
             .select("id, title, slug")
             .ilike("title", `%${query}%`);
 
-         // const { data: models, error: modelsError } = await supabase
-         //    .from("models")
-         //    .select("id, title, slug")
-         //    .ilike("title", `%${query}%`);
-
-         // const { data: categories, error: categoriesError } = await supabase
-         //    .from("categories")
-         //    .select("id, title, slug")
-         //    .ilike("title", `%${query}%`);
-
          if (productsError) {
             console.error("Error fetching search results:", productsError);
             return;
@@ -54,11 +46,6 @@ function Navbar({ categories = [] }: NavbarProps) {
 
          setSearchResults([
             ...products.map((product) => ({ ...product, type: "product" })),
-            // ...models.map((model) => ({ ...model, type: "model" })),
-            // ...categories.map((category) => ({
-            //    ...category,
-            //    type: "category",
-            // })),
          ]);
       } else {
          setSearchResults([]);
@@ -72,13 +59,7 @@ function Navbar({ categories = [] }: NavbarProps) {
    };
 
    const handleSearchResultClick = (slug: string) => {
-      // if (type === "product") {
       router.push(`/product/${slug}`);
-      // } else if (type === "model") {
-      //    router.push(`/model/${slug}`);
-      // } else if (type === "category") {
-      //    router.push(`/category/${slug}`);
-      // }
       setSearchQuery("");
       setSearchResults([]);
    };
@@ -195,7 +176,12 @@ function Navbar({ categories = [] }: NavbarProps) {
          </div>
 
          {/* Navigation Buttons - Always Visible & Compact */}
-         <div className="bg-white shadow-md w-full overflow-x-auto scrollbar-hide">
+         <div
+            className={clsx(
+               "bg-white shadow-md w-full overflow-x-auto scrollbar-hide",
+               pathname !== "/" && "hidden"
+            )}
+         >
             <div className="flex flex-nowrap gap-2 px-4 md:px-8 lg:px-32 py-2 justify-center">
                {categories.map((category) => (
                   <button
