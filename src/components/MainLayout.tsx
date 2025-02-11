@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import FloatingContactButton from "@/components/FloatingContactButton";
+// import FloatingContactButton from "@/components/FloatingContactButton";
 import useCategoryStore from "@/store/useCategoryStore";
 
 export default function MainLayout({
@@ -21,7 +21,7 @@ export default function MainLayout({
       <>
          <Navbar />
          {children}
-         <FloatingContactButton />
+         {/* <FloatingContactButton /> */}
          <Footer />
       </>
    );

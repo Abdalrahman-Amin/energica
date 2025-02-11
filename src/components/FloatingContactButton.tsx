@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-   FaWhatsapp,
+   // FaWhatsapp,
    FaEnvelope,
    FaPhone,
    FaTimes,
@@ -10,35 +10,52 @@ import {
 
 const FloatingContactButton = () => {
    const [isOpen, setIsOpen] = useState(false);
+   const buttonRef = useRef<HTMLDivElement>(null);
 
    const toggleContactDetails = () => setIsOpen(!isOpen);
 
+   const handleClickOutside = (event: MouseEvent) => {
+      if (
+         buttonRef.current &&
+         !buttonRef.current.contains(event.target as Node)
+      ) {
+         setIsOpen(false);
+      }
+   };
+
+   useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, []);
+
    return (
-      <div className="fixed bottom-8 right-8 z-50">
+      <div ref={buttonRef} className="z-50">
          {/* Floating Button */}
          <button
             onClick={toggleContactDetails}
-            className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Contact Me"
             aria-expanded={isOpen}
          >
             {isOpen ? (
-               <FaTimes className="h-6 w-6" />
+               <FaTimes className="h-5 w-5" />
             ) : (
-               <FaCommentDots className="h-6 w-6" />
+               <FaCommentDots className="h-5 w-5" />
             )}
          </button>
 
          {/* Contact Details Dropdown */}
          <div
-            className={`absolute bottom-16 right-0 bg-white rounded-lg shadow-lg p-4 w-64 transition-all duration-300 transform ${
+            className={`absolute top-20 right-0 bg-white rounded-lg shadow-lg p-4 w-64 transition-all duration-300 transform ${
                isOpen
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-95 pointer-events-none"
+                  ? "scale-100 opacity-100"
+                  : "scale-95 opacity-0 pointer-events-none"
             }`}
          >
             <div className="space-y-3">
-               <div className="flex items-center space-x-2">
+               {/* <div className="flex items-center space-x-2">
                   <FaWhatsapp className="h-5 w-5 text-green-500" />
                   <a
                      href="https://wa.me/+2001012731091"
@@ -48,7 +65,7 @@ const FloatingContactButton = () => {
                   >
                      WhatsApp
                   </a>
-               </div>
+               </div> */}
                <div className="flex items-center space-x-2">
                   <FaEnvelope className="h-5 w-5 text-red-500" />
                   <a
