@@ -7,7 +7,6 @@ import BackButton from "@/components/BackButton";
 
 const AddCategoryForm = () => {
    const [title, setTitle] = useState("");
-   const [slug, setSlug] = useState("");
    const [loading, setLoading] = useState(false);
    const supabase = createClientComponentClient();
    const router = useRouter();
@@ -19,14 +18,14 @@ const AddCategoryForm = () => {
       try {
          const { data, error } = await supabase
             .from("categories")
-            .insert([{ title, slug }])
+            .insert([{ title, slug: title.toLowerCase().replace(" ", "-") }])
             .select();
          console.log("DEBUG: ~ handleSubmit ~ data:", data);
 
          if (error) throw error;
 
          alert("Category added successfully!");
-         router.push("/admin/dashboard");
+         router.push("/admin/dashboard/categories");
       } catch (error) {
          console.error("Error adding category:", error);
          alert("Failed to add category.");
@@ -50,14 +49,6 @@ const AddCategoryForm = () => {
                   placeholder="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-blue-500 focus:outline-none bg-gray-50"
-                  required
-               />
-               <input
-                  type="text"
-                  placeholder="Slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
                   className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-blue-500 focus:outline-none bg-gray-50"
                   required
                />
