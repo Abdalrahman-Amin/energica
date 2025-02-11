@@ -22,7 +22,7 @@ export default function Home() {
    }, [supabase]);
 
    return (
-      <main className="mt-52 min-h-screen">
+      <main className="mt-36 min-h-screen">
          {categories.map((category) => (
             <Category
                key={category.id}

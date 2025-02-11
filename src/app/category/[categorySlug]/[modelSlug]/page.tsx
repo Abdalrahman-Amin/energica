@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Product } from "@/types/types";
-import { useRouter } from "next/navigation";
 
 const ModelsProducts = () => {
    const { categorySlug, modelSlug } = useParams();
@@ -12,7 +11,6 @@ const ModelsProducts = () => {
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    const supabase = createClientComponentClient();
-   const router = useRouter();
 
    useEffect(() => {
       const fetchProducts = async () => {
@@ -47,12 +45,13 @@ const ModelsProducts = () => {
       fetchProducts();
    }, [categorySlug, modelSlug, supabase]);
 
-   interface HandleViewDetails {
-      (productSlug: string): void;
-   }
-
-   const handleViewDetails: HandleViewDetails = (productSlug) => {
-      router.push(`/product/${productSlug}`);
+   const handleWhatsAppClick = ({ product }: { product: Product | null }) => {
+      const message = `Hello, I'm interested in the product: ${product?.title}`;
+      const phoneNumber = "+2001066651786"; // Replace with your phone number
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+         message
+      )}`;
+      window.open(url, "_blank");
    };
 
    if (isLoading) {
@@ -100,10 +99,10 @@ const ModelsProducts = () => {
                         {product.description}
                      </p>
                      <button
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200"
-                        onClick={() => handleViewDetails(product.slug)}
+                        onClick={() => handleWhatsAppClick({ product })}
+                        className="mt-6 w-full bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
                      >
-                        View Details
+                        Contact on WhatsApp
                      </button>
                   </div>
                </div>

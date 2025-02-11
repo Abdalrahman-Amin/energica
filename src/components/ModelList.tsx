@@ -61,7 +61,7 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          {/* Scrollable Cards */}
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar bg-slate-100 scroll-smooth"
+            className="models flex overflow-x-auto gap-6 py-4 hide-scrollbar  scroll-smooth"
             onScroll={checkOverflow}
          >
             {models.map((model) => (

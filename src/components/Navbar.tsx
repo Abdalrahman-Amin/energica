@@ -3,7 +3,6 @@
 import Image from "next/image";
 import logo from "../../public/logo.png";
 import searchIcon from "../../public/icons-search.svg";
-import phoneIcon from "../../public/phone.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
@@ -12,6 +11,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import clsx from "clsx";
 import useCategoryStore from "@/store/useCategoryStore";
 import FloatingContactButton from "./FloatingContactButton";
+import { FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
@@ -105,10 +105,7 @@ function Navbar() {
          const section = document.getElementById(`category-${category.title}`);
          if (section) {
             const rect = section.getBoundingClientRect();
-            if (
-               rect.top <= navbarHeight + 500 &&
-               rect.bottom >= navbarHeight + 100
-            ) {
+            if (rect.top <= navbarHeight + 100 && rect.bottom >= navbarHeight) {
                currentSection = category.title;
             }
          }
@@ -155,7 +152,7 @@ function Navbar() {
                <input
                   value={searchQuery}
                   onChange={handleSearchInputChange}
-                  placeholder="Search for products, models, or categories..."
+                  placeholder="Search ..."
                   type="text"
                   className="py-1 md:py-2 pl-8 md:pl-10 pr-4 w-full rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm md:text-base"
                />
@@ -176,21 +173,20 @@ function Navbar() {
 
             {/* Contact Info (Visible on Mobile and Desktop) */}
             <div className="flex items-center gap-2">
-               <div className="flex items-center gap-2 bg-blue-50 px-2 md:px-4 py-1 md:py-2 rounded-lg hover:bg-blue-100">
-                  <Image
-                     src={phoneIcon}
-                     alt="phone-icon"
-                     className="w-3 md:w-4"
-                  />
+               {/* WhatsApp Contact */}
+               <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
+                  <FaWhatsapp className="h-5 w-5 text-green-500 flex-shrink-0" />
                   <a
-                     className="text-gray-700 font-medium text-sm md:text-base"
-                     href="https://wa.me/+2001012731091"
+                     className="text-gray-700 font-medium text-sm md:text-base hover:text-blue-600 transition-colors duration-200"
+                     href="https://wa.me/+2001066651786"
                      target="_blank"
                      rel="noopener noreferrer"
                   >
-                     01012731091
+                     01066651786
                   </a>
                </div>
+
+               {/* Floating Contact Button */}
                <FloatingContactButton />
             </div>
          </div>
@@ -238,28 +234,43 @@ function Navbar() {
          {/* Mobile Menu (Dropdown) */}
          {isNavMenuOpen && (
             <div
-               className="absolute top-full left-0 w-full bg-white shadow-lg md:hidden"
+               className="absolute top-full left-0 w-full bg-white shadow-xl md:hidden z-50"
                ref={buttonRef}
             >
                <nav className="flex flex-col items-center gap-3 py-4">
                   {categories.map((category) => (
-                     <div key={category.id} className="mb-4 w-full px-4">
+                     <div
+                        key={category.id}
+                        className="w-full px-4 border-b border-gray-100 last:border-b-0"
+                     >
                         {/* Clickable Category Header */}
                         <button
                            onClick={() => handleToggle(category.id)}
-                           className="w-full text-left text-2xl font-semibold text-gray-800 flex justify-between items-center"
+                           className="w-full text-left text-xl font-semibold text-gray-800 flex justify-between items-center py-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out"
                         >
-                           {category.title}
-                           <span className="text-gray-600">
+                           <span>{category.title}</span>
+                           <span className="text-gray-500 transform transition-transform duration-200">
                               {openCategory === category.id ? "▲" : "▼"}
                            </span>
                         </button>
 
                         {/* Show models if the category is open */}
                         {openCategory === category.id && (
-                           <ul className="list-disc list-inside mt-2 pl-4 text-gray-600">
+                           <ul className="mt-2 pl-6 text-gray-600 space-y-2">
                               {models[category.id]?.map((model) => (
-                                 <li key={model.id}>{model.title}</li>
+                                 <Link
+                                    key={model.id}
+                                    href={`/category/${category.slug}/${model.slug}`}
+                                    passHref
+                                    onClick={() => setIsNavMenuOpen(false)}
+                                 >
+                                    <li
+                                       key={model.id}
+                                       className="text-base hover:text-blue-600 hover:bg-gray-50 px-3 py-1.5 rounded-md transition-all duration-200 ease-in-out"
+                                    >
+                                       {model.title}
+                                    </li>
+                                 </Link>
                               ))}
                            </ul>
                         )}

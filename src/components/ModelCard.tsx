@@ -12,40 +12,47 @@ interface ModelCardProps {
 
 const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
    return (
-      <div className="model-card flex-shrink-0 hover:scale-105 transition-all duration-300 ease-in-out transform flex flex-col lg:flex-row h-auto w-full md:max-w-md lg:max-w-lg overflow-hidden border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 bg-white">
-         {/* Image Section */}
-         <div className="w-full lg:w-1/2 flex-shrink-0 relative h-48 lg:h-auto">
+      <div className="model-card flex-shrink-0  transition-all duration-300 ease-in-out transform w-64 h-64 overflow-hidden border-2 border-blue-500 rounded-lg shadow-md hover:shadow-lg hover:shadow-blue-500/50 hover:-translate-y-1 bg-white grid grid-cols-2 grid-rows-2">
+         {/* Top Left: Header */}
+         <div className="p-2 ps-5 flex items-start justify-start bg-gray-50 overflow-hidden">
+            <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
+               <h3 className="text-2xl font-semibold text-gray-900 cursor-pointer text-center truncate">
+                  {model.title}
+               </h3>
+            </Link>
+         </div>
+
+         {/* Top Right: Image */}
+         <div className="relative">
             <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
                <Image
                   src={model.image}
                   alt={model.title}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-t-lg lg:rounded-none lg:rounded-l-lg"
+                  className="rounded-tr-lg"
                />
             </Link>
          </div>
 
-         {/* Text Content */}
-         <div className="flex-1 p-6 flex flex-col h-full justify-start bg-gray-50">
-            <div className="mb-10">
-               <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
-                  <h3 className="text-xl font-semibold text-gray-900 self-center cursor-pointer">
-                     {model.title}
-                  </h3>
-               </Link>
-               <p className="text-sm text-gray-600 mt-1">{model.description}</p>
-            </div>
-            <div className="mt-auto">
-               <a
-                  href={model.pdf_url}
-                  download
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-               >
-                  <FaFilePdf className="mr-2" /> {/* PDF Icon */}
-                  Download PDF
-               </a>
-            </div>
+         {/* Bottom Left: Description */}
+         <div className="p-2 flex bg-gray-50 overflow-hidden">
+            <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
+               <p className="text-sm text-gray-600 ">{model.description}</p>
+            </Link>
+         </div>
+
+         {/* Bottom Right: PDF Link */}
+         <div className="p-2 flex items-end justify-center bg-gray-50">
+            <a
+               href={model.pdf_url}
+               download
+               target="_blank"
+               className=" inline-flex items-center px-2 py-1 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+               <FaFilePdf className="mr-1" /> {/* PDF Icon */}
+               Data Sheet
+            </a>
          </div>
       </div>
    );
