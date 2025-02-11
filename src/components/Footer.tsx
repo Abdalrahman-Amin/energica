@@ -1,10 +1,12 @@
 "use client";
+import useCategoryStore from "@/store/useCategoryStore";
 import { usePathname } from "next/navigation";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
+   const { categories } = useCategoryStore();
    const pathName = usePathname();
-   if(pathName.includes("admin")) return null
+   if (pathName.includes("admin")) return null;
    return (
       <footer className="bg-gray-900 text-white py-12  w-full">
          <div className="container mx-auto px-4">
@@ -24,38 +26,16 @@ const Footer = () => {
                <div className="space-y-4">
                   <h3 className="text-xl font-bold">Quick Links</h3>
                   <ul className="space-y-2">
-                     <li>
-                        <a
-                           href="/batteries"
-                           className="text-gray-400 hover:text-white transition-colors"
-                        >
-                           Batteries
-                        </a>
-                     </li>
-                     <li>
-                        <a
-                           href="/ups"
-                           className="text-gray-400 hover:text-white transition-colors"
-                        >
-                           UPS
-                        </a>
-                     </li>
-                     <li>
-                        <a
-                           href="/inverters"
-                           className="text-gray-400 hover:text-white transition-colors"
-                        >
-                           Inverters
-                        </a>
-                     </li>
-                     <li>
-                        <a
-                           href="/avr"
-                           className="text-gray-400 hover:text-white transition-colors"
-                        >
-                           AVR
-                        </a>
-                     </li>
+                     {categories.map((category) => (
+                        <li key={category.id}>
+                           <a
+                              href={`/category/${category.slug}/products`}
+                              className="text-gray-400 hover:text-white transition-colors"
+                           >
+                              {category.title}
+                           </a>
+                        </li>
+                     ))}
                   </ul>
                </div>
 
@@ -63,10 +43,13 @@ const Footer = () => {
                <div className="space-y-4">
                   <h3 className="text-xl font-bold">Contact Us</h3>
                   <ul className="space-y-2">
-                     <li className="text-gray-400">Email: info@energica.com</li>
-                     <li className="text-gray-400">Phone: +20 101 273 1091</li>
                      <li className="text-gray-400">
-                        Address: 123 Energy St, Cairo, Egypt
+                        Email: Muhammadelshaer.energica@gmail.com
+                     </li>
+                     <li className="text-gray-400">Phone: +20 107 070 8070</li>
+                     <li className="text-gray-400">
+                        Address: 33 Youssef El seddik St, Behind Elgharbiyya
+                        Governate
                      </li>
                   </ul>
                </div>

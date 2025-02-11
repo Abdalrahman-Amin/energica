@@ -10,26 +10,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import clsx from "clsx";
+import useCategoryStore from "@/store/useCategoryStore";
 
-interface Category {
-   id: number;
-   title: string;
-}
-
-interface NavbarProps {
-   categories?: Category[];
-}
-
-function Navbar({ categories = [] }: NavbarProps) {
+function Navbar() {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<string | null>(null);
    const [searchResults, setSearchResults] = useState<
       { id: number; title: string; slug: string; type: string }[]
-   >([]);
-   const [searchQuery, setSearchQuery] = useState("");
-   const supabase = createClientComponentClient();
+      >([]);
+      const [searchQuery, setSearchQuery] = useState("");
+      const supabase = createClientComponentClient();
    const pathname = usePathname();
    console.log("DEBUG: ~ Navbar ~ pathname:", pathname);
+   const { categories } = useCategoryStore();
    const router = useRouter();
 
    const handleSearch = async (query: string) => {

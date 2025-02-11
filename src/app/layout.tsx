@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import { Category as categoryType } from "@/types/types";
-import FloatingContactButton from "@/components/FloatingContactButton";
+import MainLayout from "@/components/MainLayout";
 
 const geistSans = Geist({
    variable: "--font-geist-sans",
@@ -26,41 +23,12 @@ export default function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   const categories: categoryType[] = [
-      {
-         id: 2,
-         title: "UPS",
-         slug: "ups",
-         image: "https://picsum.photos/200/300",
-      },
-      {
-         id: 3,
-         title: "Inverters",
-         slug: "inverters",
-         image: "https://picsum.photos/200/300",
-      },
-      {
-         id: 1,
-         title: "Battiries",
-         slug: "batteries",
-         image: "https://picsum.photos/200/300",
-      },
-      {
-         id: 4,
-         title: "Stabilizers",
-         slug: "avr",
-         image: "https://picsum.photos/200/300",
-      },
-   ];
    return (
       <html lang="en" dir="ltr">
          <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
          >
-            <Navbar categories={categories} />
-            {children}
-            <FloatingContactButton />
-            <Footer />
+            <MainLayout>{children}</MainLayout>
          </body>
       </html>
    );
