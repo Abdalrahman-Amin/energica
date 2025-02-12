@@ -60,7 +60,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    return (
       category && (
          <section
-            className=" pt-6 pb-6 px-6    border border-gray-200 transition-all duration-300 ease-in-out transform "
+            className=" pt-6 pb-6 px-6 xl:px-80 lg:px-40 md:px-20 border border-gray-200 transition-all duration-300 ease-in-out transform "
             id={`category-${category.title}`}
          >
             {/* Header: Category Title + Link */}

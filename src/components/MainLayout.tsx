@@ -21,7 +21,6 @@ export default function MainLayout({
       <>
          <Navbar />
          {children}
-         {/* <FloatingContactButton /> */}
          <Footer />
       </>
    );

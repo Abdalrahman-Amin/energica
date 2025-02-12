@@ -132,7 +132,7 @@ function Navbar() {
    if (pathname.includes("/admin")) return null;
 
    return (
-      <header className="fixed top-0 w-full z-50 bg-white shadow-md">
+      <header className="fixed top-0 w-full z-50 bg-white shadow-md xl:px-80 lg:px-40 md:px-20">
          {/* First Row: Logo, Search Bar, and Contact Info */}
          <div className="flex flex-row items-center justify-between px-4  py-2">
             {/* Logo */}
