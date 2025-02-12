@@ -60,7 +60,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    return (
       category && (
          <section
-            className=" pt-6 pb-6 px-6  shadow-xl rounded-2xl border border-gray-200 transition-all duration-300 ease-in-out transform "
+            className=" pt-6 pb-6 px-6    border border-gray-200 transition-all duration-300 ease-in-out transform "
             id={`category-${category.title}`}
          >
             {/* Header: Category Title + Link */}
@@ -69,10 +69,10 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                   <a href={`/category/${slug}/products`}>{category.title}</a>
                </h2>
                <a
-                  href={`/category/${slug}/products`}
+                  href={`/category/${slug}`}
                   className="text-lg text-blue-600 font-medium hover:text-blue-700 hover:underline transition-all duration-200"
                >
-                  See all products →
+                  See all products
                </a>
             </div>
 

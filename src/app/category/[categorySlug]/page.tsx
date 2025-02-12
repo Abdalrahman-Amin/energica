@@ -70,6 +70,14 @@ const CategoryProductsPage = () => {
 
       fetchProductsAndModels();
    }, [categorySlug, supabase]);
+   const handleWhatsAppClick = ({ product }: { product: Product | null }) => {
+      const message = `Hello, I'm interested in the product: ${product?.title}`;
+      const phoneNumber = "+2001066651786"; // Replace with your phone number
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+         message
+      )}`;
+      window.open(url, "_blank");
+   };
 
    if (isLoading) {
       return <Loader size="lg" />;
@@ -130,12 +138,12 @@ const CategoryProductsPage = () => {
                            <p className="text-sm text-gray-600 mb-4">
                               {product.description}
                            </p>
-                           <a
-                              href={`/product/${product.slug}`}
-                              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-center block"
+                           <button
+                              onClick={() => handleWhatsAppClick({ product })}
+                              className="mt-6 w-full bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
                            >
-                              View Details
-                           </a>
+                              Contact on WhatsApp
+                           </button>
                         </div>
                      </div>
                   ))}
