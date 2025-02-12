@@ -18,6 +18,8 @@ export interface Model {
    description: string;
    image: string;
    pdf_url: string;
+   rating_value: number;
+   rating_unit: string;
 }
 
 export interface Product {
@@ -29,24 +31,6 @@ export interface Product {
    category: number;
    model: number;
    slug: string;
+   rating_value: number;
+   rating_unit: string;
 }
-
-// export interface SearchResults {
-//    categories: Category[];
-//    models: Model[];
-//    products: Product[];
-//  }
-
-interface ModelRes {
-   id: number;
-   title: string;
-   products: Product[];
-}
-
-interface CategoryRes {
-   id: number;
-   title: string;
-   models: ModelRes[];
-}
-
-export type NestedResults = CategoryRes[];
