@@ -282,7 +282,7 @@ function Navbar() {
                               {models[category.id]?.map((model) => (
                                  <Link
                                     key={model.id}
-                                    href={`/category/${category.slug}/${model.slug}`}
+                                    href={`/model/${model.id}`}
                                     passHref
                                     onClick={() => setIsNavMenuOpen(false)}
                                  >
