@@ -29,7 +29,7 @@ const Footer = () => {
                      {categories.map((category) => (
                         <li key={category.id}>
                            <a
-                              href={`/category/${category.slug}/products`}
+                              href={`/category/${category.slug}`}
                               className="text-gray-400 hover:text-white transition-colors"
                            >
                               {category.title}

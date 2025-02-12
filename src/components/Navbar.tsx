@@ -95,7 +95,7 @@ function Navbar() {
             top: section.offsetTop - navbarHeight,
             behavior: "smooth",
          });
-         setActiveSection(categoryId);
+         // setActiveSection(categoryId);
       }
 
       setIsNavMenuOpen(false); // Close menu on mobile after click
@@ -234,7 +234,7 @@ function Navbar() {
             {/* Navigation Buttons - Always Visible & Compact */}
             <div
                className={clsx(
-                  "flex flex-nowrap gap-2 justify-center w-full",
+                  "flex flex-nowrap gap-1 md:gap-2 justify-center w-full",
                   pathname !== "/" && "hidden"
                )}
             >
@@ -242,7 +242,7 @@ function Navbar() {
                   <button
                      key={category.id}
                      onClick={() => handleCategoryClick(category.title)}
-                     className={`whitespace-nowrap px-3 py-1 text-xs md:text-sm rounded-lg font-medium transition-all shadow-md bg-blue-50 text-blue-600 hover:bg-blue-500 hover:text-white
+                     className={`whitespace-nowrap px-3 py-1 text-[0.5rem] md:text-sm rounded-lg font-medium transition-all shadow-md bg-blue-50 text-blue-600 
                   ${
                      activeSection === category.title
                         ? "bg-blue-500 text-white"
