@@ -66,6 +66,7 @@ function Navbar() {
          !buttonRef.current.contains(event.target as Node)
       ) {
          setIsNavMenuOpen(false);
+         setOpenCategory(null);
       }
    };
 
@@ -98,6 +99,7 @@ function Navbar() {
       }
 
       setIsNavMenuOpen(false); // Close menu on mobile after click
+      setOpenCategory(null);
    };
 
    const handleScroll = useCallback(() => {
@@ -284,7 +286,10 @@ function Navbar() {
                                     key={model.id}
                                     href={`/model/${model.id}`}
                                     passHref
-                                    onClick={() => setIsNavMenuOpen(false)}
+                                    onClick={() => {
+                                       setIsNavMenuOpen(false);
+                                       setOpenCategory(null);
+                                    }}
                                  >
                                     <li
                                        key={model.id}
