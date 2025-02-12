@@ -66,7 +66,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
             {/* Header: Category Title + Link */}
             <div className="flex flex-wrap items-center justify-between border-b border-gray-300 pb-4 mb-6 ">
                <h2 className="text-3xl font-bold text-blue-700 tracking-wide cursor-pointer">
-                  <a href={`/category/${slug}/products`}>{category.title}</a>
+                  <a href={`/category/${slug}`}>{category.title}</a>
                </h2>
                <a
                   href={`/category/${slug}`}
