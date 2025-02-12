@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import clsx from "clsx";
 import useCategoryStore from "@/store/useCategoryStore";
 import FloatingContactButton from "./FloatingContactButton";
@@ -16,41 +15,49 @@ import { FaWhatsapp } from "react-icons/fa";
 function Navbar() {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<string | null>(null);
-   const [searchResults, setSearchResults] = useState<
-      { id: number; title: string; slug: string; type: string }[]
-   >([]);
    const [searchQuery, setSearchQuery] = useState("");
-   const supabase = createClientComponentClient();
    const pathname = usePathname();
-   console.log("DEBUG: ~ Navbar ~ pathname:", pathname);
-   const { categories, fetchModelsForCategory, models } = useCategoryStore();
+   const {
+      categories,
+      fetchModelsForCategory,
+      fetchSearchResults,
+      searchResults,
+      models,
+   } = useCategoryStore();
+   const router = useRouter();
    const [openCategory, setOpenCategory] = useState<number | null>(null);
    const buttonRef = useRef<HTMLDivElement>(null);
+   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+   useEffect(() => {
+      if (
+         searchResults.categories.length > 0 ||
+         searchResults.models.length > 0
+         // ||
+         // searchResults.products.length > 0
+      ) {
+         setIsSearchOpen(true);
+      }
+   }, [searchResults.categories.length, searchResults.models.length]);
 
    const handleToggle = (categoryId: number) => {
       setOpenCategory(openCategory === categoryId ? null : categoryId);
    };
 
-   const router = useRouter();
-
    const handleSearch = async (query: string) => {
       if (query.length > 2) {
-         const { data: products, error: productsError } = await supabase
-            .from("products")
-            .select("id, title, slug")
-            .ilike("title", `%${query}%`);
-
-         if (productsError) {
-            console.error("Error fetching search results:", productsError);
-            return;
-         }
-
-         setSearchResults([
-            ...products.map((product) => ({ ...product, type: "product" })),
-         ]);
-      } else {
-         setSearchResults([]);
+         await fetchSearchResults(query);
       }
+   };
+
+   const handleSearchResultClick = (query: string, type: string) => {
+      if (type === "category") {
+         router.push(`/category/${query}`);
+      } else if (type === "model") {
+         router.push(`/model/${query}`);
+      }
+      setIsSearchOpen(false);
+      setSearchQuery("");
    };
 
    const handleClickOutside = (event: MouseEvent) => {
@@ -75,11 +82,7 @@ function Navbar() {
       handleSearch(query);
    };
 
-   const handleSearchResultClick = (slug: string) => {
-      router.push(`/product/${slug}`);
-      setSearchQuery("");
-      setSearchResults([]);
-   };
+   // Removed unused handleSearchResultClick function
 
    // Scroll to category section
    const handleCategoryClick = (categoryId: string) => {
@@ -156,19 +159,38 @@ function Navbar() {
                   type="text"
                   className="py-1 md:py-2 pl-8 md:pl-10 pr-4 w-full rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm md:text-base"
                />
-               {searchResults.length > 0 && (
+               {isSearchOpen ? (
                   <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10">
-                     {searchResults.map((result) => (
+                     {searchResults.categories.map((category) => (
                         <div
-                           key={result.id}
-                           onClick={() => handleSearchResultClick(result.slug)}
+                           key={category.id}
                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                           onClick={() =>
+                              handleSearchResultClick(
+                                 category.title,
+                                 "category"
+                              )
+                           }
                         >
-                           {result.title}
+                           {category.title}
+                        </div>
+                     ))}
+                     {searchResults.models.map((model) => (
+                        <div
+                           key={model.id}
+                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                           onClick={() =>
+                              handleSearchResultClick(
+                                 model.id.toString(),
+                                 "model"
+                              )
+                           }
+                        >
+                           {model.title}
                         </div>
                      ))}
                   </div>
-               )}
+               ) : null}
             </div>
 
             {/* Contact Info (Visible on Mobile and Desktop) */}

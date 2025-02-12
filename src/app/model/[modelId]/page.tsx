@@ -3,47 +3,69 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Product } from "@/types/types";
+import { Category, Model, Product } from "@/types/types";
 
 const ModelsProducts = () => {
-   const { categorySlug, modelSlug } = useParams();
+   const { modelId } = useParams();
+   const [model, setModel] = useState<Model | null>(null);
+   const [category, setCategory] = useState<Category | null>(null);
    const [products, setProducts] = useState<Product[]>([]);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    const supabase = createClientComponentClient();
 
    useEffect(() => {
-      const fetchProducts = async () => {
+      const fetchModelAndCategory = async () => {
          try {
-            if (categorySlug && modelSlug) {
-               const { data, error } = await supabase
-                  .from("products")
-                  .select(
-                     `
-                     *,
-                     categories!inner(slug),
-                     models!inner(slug)
-                  `
-                  )
-                  .eq("categories.slug", categorySlug)
-                  .eq("models.slug", modelSlug);
+            // Fetch the model by its ID
+            const { data: modelData, error: modelError } = await supabase
+               .from("models")
+               .select("*")
+               .eq("id", modelId)
+               .single();
 
-               if (error) {
-                  throw error;
-               }
+            if (modelError) throw modelError;
+            setModel(modelData);
 
-               setProducts(data || []);
-            }
+            // Fetch the category associated with the model using category_models table
+            const { data: categoryModelData, error: categoryModelError } =
+               await supabase
+                  .from("category_models")
+                  .select("category_id")
+                  .eq("model_id", modelId)
+                  .single();
+
+            if (categoryModelError) throw categoryModelError;
+
+            const { data: categoryData, error: categoryError } = await supabase
+               .from("categories")
+               .select("*")
+               .eq("id", categoryModelData.category_id)
+               .single();
+
+            if (categoryError) throw categoryError;
+            setCategory(categoryData);
+
+            // Fetch products associated with the model
+            const { data: productsData, error: productsError } = await supabase
+               .from("products")
+               .select("*")
+               .eq("model", modelId);
+
+            if (productsError) throw productsError;
+            setProducts(productsData || []);
          } catch (error) {
-            console.error("Error fetching products:", error);
-            setError("Failed to fetch products. Please try again later.");
+            console.error("Error fetching data:", error);
+            setError("Failed to fetch data. Please try again later.");
          } finally {
             setIsLoading(false);
          }
       };
 
-      fetchProducts();
-   }, [categorySlug, modelSlug, supabase]);
+      if (modelId) {
+         fetchModelAndCategory();
+      }
+   }, [modelId, supabase]);
 
    const handleWhatsAppClick = ({ product }: { product: Product | null }) => {
       const message = `Hello, I'm interested in the product: ${product?.title}`;
@@ -74,8 +96,8 @@ const ModelsProducts = () => {
       <div className="container mx-auto px-4 py-8 mt-56">
          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
             Products for Category:{" "}
-            <span className="text-blue-600">{categorySlug}</span> and Model:{" "}
-            <span className="text-blue-600">{modelSlug}</span>
+            <span className="text-blue-600">{category?.title}</span> and Model:{" "}
+            <span className="text-blue-600">{model?.title}</span>
          </h1>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (

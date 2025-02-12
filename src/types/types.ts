@@ -30,3 +30,23 @@ export interface Product {
    model: number;
    slug: string;
 }
+
+// export interface SearchResults {
+//    categories: Category[];
+//    models: Model[];
+//    products: Product[];
+//  }
+
+interface ModelRes {
+   id: number;
+   title: string;
+   products: Product[];
+}
+
+interface CategoryRes {
+   id: number;
+   title: string;
+   models: ModelRes[];
+}
+
+export type NestedResults = CategoryRes[];

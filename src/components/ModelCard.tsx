@@ -24,7 +24,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
 
          {/* Top Right: Image */}
          <div className="relative">
-            <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
+            <Link href={`/model/${model.id}`} passHref>
                <Image
                   src={model.image}
                   alt={model.title}
@@ -37,7 +37,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
 
          {/* Bottom Left: Description */}
          <div className="p-2 flex bg-gray-50 overflow-hidden">
-            <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
+            <Link href={`/model/${model.id}`} passHref>
                <p className="text-sm text-gray-600 ">{model.description}</p>
             </Link>
          </div>

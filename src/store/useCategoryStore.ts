@@ -1,20 +1,29 @@
 import { create } from "zustand";
-import { Category, Model } from "@/types/types";
+import { Category, Model, Product } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface CategoryState {
    categories: Category[];
    models: { [key: number]: Model[] }; // Models keyed by category ID
+   products: Product[];
+   searchResults: {
+      categories: Category[];
+      models: Model[];
+      // products: Product[];
+   };
    isLoading: boolean;
    error: string | null;
    fetchCategories: () => Promise<void>;
    fetchModelsForCategory: (categoryId: number) => Promise<void>;
+   fetchSearchResults: (query: string) => Promise<void>;
    deleteCategory: (id: number) => Promise<void>;
 }
 
 const useCategoryStore = create<CategoryState>((set) => ({
    categories: [],
    models: {},
+   products: [],
+   searchResults: { categories: [], models: [], products: [] },
    isLoading: true,
    error: null,
    fetchCategories: async () => {
@@ -57,6 +66,43 @@ const useCategoryStore = create<CategoryState>((set) => ({
          console.error("Error fetching models:", error);
          set({
             error: "Failed to fetch models. Please try again later.",
+            isLoading: false,
+         });
+      }
+   },
+   fetchSearchResults: async (query: string) => {
+      const supabase = createClientComponentClient();
+      set({ isLoading: true, error: null });
+      try {
+         const [
+            { data: categoriesData, error: categoriesError },
+            { data: modelsData, error: modelsError },
+            // { data: productsData, error: productsError },
+         ] = await Promise.all([
+            supabase
+               .from("categories")
+               .select("*")
+               .ilike("title", `%${query}%`),
+            supabase.from("models").select("*").ilike("title", `%${query}%`),
+            supabase.from("products").select("*").ilike("title", `%${query}%`),
+         ]);
+
+         if (categoriesError) throw categoriesError;
+         if (modelsError) throw modelsError;
+         // if (productsError) throw productsError;
+
+         set({
+            searchResults: {
+               categories: categoriesData,
+               models: modelsData,
+               // products: productsData,
+            },
+            isLoading: false,
+         });
+      } catch (error) {
+         console.error("Error fetching search results:", error);
+         set({
+            error: "Failed to fetch search results. Please try again later.",
             isLoading: false,
          });
       }
