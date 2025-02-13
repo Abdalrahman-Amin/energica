@@ -40,15 +40,15 @@ const FloatingContactButton = () => {
             aria-expanded={isOpen}
          >
             {isOpen ? (
-               <FaTimes className="h-5 w-5" />
+               <FaTimes className="h-3 w-3 md:h-5 md:w-5" />
             ) : (
-               <FaCommentDots className="h-5 w-5" />
+               <FaCommentDots className="h-3 w-3 md:h-5 md:w-5" />
             )}
          </button>
 
          {/* Contact Details Dropdown */}
          <div
-            className={`absolute top-20 right-0 bg-white rounded-lg shadow-lg p-4 w-64 transition-all duration-300 transform ${
+            className={`absolute top-20 right-0 md:right-20 lg:right-48 xl:right-80 bg-white rounded-lg shadow-lg p-4 w-64 transition-all duration-300 transform ${
                isOpen
                   ? "scale-100 opacity-100"
                   : "scale-95 opacity-0 pointer-events-none"

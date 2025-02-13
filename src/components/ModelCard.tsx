@@ -30,7 +30,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
             </div>
 
             {/* Image */}
-            <div className="relative w-24 h-24 flex-shrink-0">
+            <div className="relative w-24 h-24 flex-shrink-0 ">
                <Link href={`/model/${model.id}`} passHref>
                   <Image
                      src={model.image}
@@ -50,7 +50,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
                download
                target="_blank"
                rel="noopener noreferrer"
-               className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+               className="inline-flex w-24 items-center px-1 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
             >
                <FaFilePdf className="mr-2" />
                Data Sheet

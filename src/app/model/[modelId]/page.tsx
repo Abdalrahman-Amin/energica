@@ -90,36 +90,47 @@ const ModelsProducts = () => {
    }
 
    return (
-      <div className="container mx-auto px-4 py-8 mt-48">
-         <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-            Products for Category:{" "}
-            <span className="text-blue-600">{category?.title}</span> and Model:{" "}
-            <span className="text-blue-600">{model?.title}</span>
+      <div className="container mx-auto px-4 py-10 mt-32">
+         <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
+            Explore <span className="text-blue-700">{category?.title}</span> -
+            <span className="text-blue-700"> {model?.title}</span>
          </h1>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {products.map((product) => (
                <div
                   key={product.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
                >
-                  <Image
-                     src={product.image}
-                     alt={product.title}
-                     width={500}
-                     height={300}
-                     className="w-full h-48 object-cover"
-                  />
-
-                  <div className="p-6">
-                     <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                        {product.title}
-                     </h2>
-                     <p className="text-sm text-gray-600 mb-4">
+                  <a
+                     href={product.image}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                  >
+                     <Image
+                        src={product.image}
+                        alt={product.title}
+                        width={400}
+                        height={250}
+                        className="w-full h-40 object-cover cursor-pointer"
+                     />
+                  </a>
+                  <div className="p-4">
+                     <div className="flex justify-between items-center">
+                        <h2 className="text-lg font-bold text-gray-900">
+                           {product.title}
+                        </h2>
+                        {product.rating_value && (
+                           <span className="text-sm font-medium text-gray-700">
+                              {product.rating_value} {product.rating_unit}
+                           </span>
+                        )}
+                     </div>
+                     <p className="text-xs text-gray-600 mt-2 line-clamp-2">
                         {product.description}
                      </p>
                      <button
                         onClick={() => handleWhatsAppClick({ product })}
-                        className="mt-6 w-full bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
+                        className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-all shadow-md hover:shadow-lg text-sm font-medium"
                      >
                         Contact on WhatsApp
                      </button>

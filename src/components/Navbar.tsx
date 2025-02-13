@@ -213,10 +213,10 @@ function Navbar() {
             {/* Contact Info (Visible on Mobile and Desktop) */}
             <div className="flex items-center gap-2">
                {/* WhatsApp Contact */}
-               <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
-                  <FaWhatsapp className="h-5 w-5 text-green-500 flex-shrink-0" />
+               <div className="flex items-center gap-1 md:gap-2 bg-blue-50 px-1 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
+                  <FaWhatsapp className="h-3 w-3 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
                   <a
-                     className="text-gray-700 font-medium text-xs md:text-base hover:text-blue-600 transition-colors duration-200"
+                     className="text-gray-700 font-medium text-[0.5rem] md:text-base hover:text-blue-600 transition-colors duration-200"
                      href="https://wa.me/+2001066651786"
                      target="_blank"
                      rel="noopener noreferrer"
