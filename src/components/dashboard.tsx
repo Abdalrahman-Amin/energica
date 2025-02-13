@@ -66,7 +66,7 @@ const AdminDashboard = () => {
    const handleLogout = async () => {
       const supabase = createClientComponentClient();
       await supabase.auth.signOut();
-      window.location.href = "/login"; // Redirect to login page after logout
+      window.location.href = "/admin/login"; // Redirect to login page after logout
    };
 
    return (
