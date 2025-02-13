@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "../../public/logo.png";
 import searchIcon from "../../public/icons-search.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaXmark, FaBars } from "react-icons/fa6";
+// import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -87,6 +87,21 @@ function Navbar() {
 
    // Scroll to category section
    const handleCategoryClick = (categoryId: string) => {
+      if (pathname !== "/") {
+         setActiveSection(categoryId);
+         router.push(`/`);
+         setTimeout(() => {
+            const section = document.getElementById(`category-${categoryId}`);
+            const navbarHeight =
+               document.querySelector("header")?.offsetHeight || 0;
+            if (section) {
+               window.scrollTo({
+                  top: section.offsetTop - navbarHeight,
+                  behavior: "smooth",
+               });
+            }
+         }, 500);
+      }
       const section = document.getElementById(`category-${categoryId}`);
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
 
@@ -201,7 +216,7 @@ function Navbar() {
                <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
                   <FaWhatsapp className="h-5 w-5 text-green-500 flex-shrink-0" />
                   <a
-                     className="text-gray-700 font-medium text-sm md:text-base hover:text-blue-600 transition-colors duration-200"
+                     className="text-gray-700 font-medium text-xs md:text-base hover:text-blue-600 transition-colors duration-200"
                      href="https://wa.me/+2001066651786"
                      target="_blank"
                      rel="noopener noreferrer"
@@ -218,7 +233,7 @@ function Navbar() {
          {/* Second Row: Toggle Button and Navigation Buttons */}
          <div className="flex items-center justify-between px-4 md:px-8 lg:px-32 py-2 bg-white shadow-md">
             {/* Mobile Menu Button */}
-            <button
+            {/* <button
                onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
                aria-expanded={isNavMenuOpen}
                aria-label="Toggle navigation menu"
@@ -229,20 +244,20 @@ function Navbar() {
                ) : (
                   <FaBars size={20} className="text-blue-600" />
                )}
-            </button>
+            </button> */}
 
             {/* Navigation Buttons - Always Visible & Compact */}
             <div
                className={clsx(
-                  "flex flex-nowrap gap-1 md:gap-2 justify-center w-full",
-                  pathname !== "/" && "hidden"
+                  "flex flex-nowrap gap-1 md:gap-2 justify-center w-full"
+                  // pathname !== "/" && "hidden"
                )}
             >
                {categories.map((category) => (
                   <button
                      key={category.id}
                      onClick={() => handleCategoryClick(category.title)}
-                     className={`whitespace-nowrap px-3 py-1 text-[0.5rem] md:text-sm rounded-lg font-medium transition-all shadow-md bg-blue-50 text-blue-600 
+                     className={`whitespace-nowrap px-3 py-1 text-xs md:text-sm rounded-lg font-medium transition-all shadow-md bg-blue-50 text-blue-600 
                   ${
                      activeSection === category.title
                         ? "bg-blue-500 text-white"
