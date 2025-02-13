@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import BackButton from "@/components/BackButton";
 
-const AddCategoryForm = () => {
+interface AddCategoryFormProps {
+   setToggleAddedCategory: () => void;
+}
+
+const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
+   setToggleAddedCategory,
+}) => {
    const [title, setTitle] = useState("");
    const [loading, setLoading] = useState(false);
    const supabase = createClientComponentClient();
-   const router = useRouter();
 
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -25,7 +28,10 @@ const AddCategoryForm = () => {
          if (error) throw error;
 
          alert("Category added successfully!");
-         router.push("/admin/dashboard/categories");
+
+         setTitle("");
+
+         setToggleAddedCategory();
       } catch (error) {
          console.error("Error adding category:", error);
          alert("Failed to add category.");
@@ -35,27 +41,24 @@ const AddCategoryForm = () => {
    };
 
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 to-purple-200">
-         <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-            <BackButton />
-         </div>
-         <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-lg border border-gray-200">
-            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+      <div className="flex items-center justify-center  bg-gray-900 text-white w-[90%]">
+         <div className="bg-gray-800 shadow-xl rounded-lg p-8 w-full max-w-lg border border-gray-700">
+            <h1 className="text-3xl font-semibold text-center text-gray-200 mb-6">
                Add Category
             </h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                <input
                   type="text"
                   placeholder="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-blue-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 border border-gray-600 bg-gray-700 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
                />
                <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-bold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 disabled:bg-gray-400 shadow-lg"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-all duration-300 disabled:bg-gray-600 shadow-md"
                >
                   {loading ? "Adding..." : "Add Category"}
                </button>

@@ -2,21 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
 import { Category } from "@/types/types";
-import BackButton from "@/components/BackButton";
 
-const AddModelForm = () => {
+interface AddModelFormProps {
+   setToggleAddedModel: () => void;
+}
+
+const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
    const [categories, setCategories] = useState<Category[]>([]);
    const [selectedCategory, setSelectedCategory] = useState("");
-   const [slug, setSlug] = useState("");
+   const [ratingVal, setRatingVal] = useState(0);
+   const [ratingUnit, setRatingUnit] = useState("");
    const [title, setTitle] = useState("");
    const [description, setDescription] = useState("");
    const [image, setImage] = useState<File | null>(null);
    const [pdfFile, setPdfFile] = useState<File | null>(null); // State for the PDF file
    const [loading, setLoading] = useState(false);
    const supabase = createClientComponentClient();
-   const router = useRouter();
 
    useEffect(() => {
       const fetchCategories = async () => {
@@ -89,7 +91,15 @@ const AddModelForm = () => {
          const { data: modelData, error: modelError } = await supabase
             .from("models")
             .insert([
-               { title, slug, description, image: imgUrl, pdf_url: pdfUrl },
+               {
+                  title,
+                  slug: title.toLowerCase().replace(" ", "-"),
+                  description,
+                  image: imgUrl,
+                  pdf_url: pdfUrl,
+                  rating_value: ratingVal,
+                  rating_unit: ratingUnit,
+               },
             ])
             .select();
 
@@ -105,7 +115,15 @@ const AddModelForm = () => {
          if (linkError) throw linkError;
 
          alert("Model added successfully!");
-         router.push("/admin/dashboard");
+         setToggleAddedModel();
+
+         setTitle("");
+         setDescription("");
+         setImage(null);
+         setPdfFile(null);
+         setSelectedCategory("");
+         setRatingVal(0);
+         setRatingUnit("");
       } catch (error) {
          console.error("Error adding model:", error);
          alert("Failed to add model.");
@@ -115,19 +133,16 @@ const AddModelForm = () => {
    };
 
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-200 to-blue-200">
-         <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-            <BackButton />
-         </div>
-         <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-lg border border-gray-200">
-            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+      <div className="flex items-center justify-center bg-gray-900 w-[90%]">
+         <div className="bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-lg border border-gray-700">
+            <h1 className="text-3xl font-bold text-center text-white mb-6">
                Add Model
             </h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                   required
                >
                   <option value="" disabled>
@@ -144,15 +159,7 @@ const AddModelForm = () => {
                   placeholder="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
-                  required
-               />
-               <input
-                  type="text"
-                  placeholder="Slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                   required
                />
                <input
@@ -160,19 +167,35 @@ const AddModelForm = () => {
                   placeholder="Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                   required
                />
-               <label className="text-gray-700 font-medium">Upload Image</label>
+               <input
+                  type="number"
+                  placeholder="Rating value"
+                  value={ratingVal}
+                  onChange={(e) => setRatingVal(Number(e.target.value))}
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+               />
+               <input
+                  type="text"
+                  placeholder="Rating Unit"
+                  value={ratingUnit}
+                  onChange={(e) => setRatingUnit(e.target.value)}
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+               />
+               <label className="text-gray-300 font-medium">Upload Image</label>
                <input
                   type="file"
                   accept="image/*"
                   onChange={(e) =>
                      e.target.files && setImage(e.target.files[0])
                   }
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                />
-               <label className="text-gray-700 font-medium">
+               <label className="text-gray-300 font-medium">
                   Upload Data Sheet
                </label>
                <input
@@ -181,12 +204,12 @@ const AddModelForm = () => {
                   onChange={(e) =>
                      e.target.files && setPdfFile(e.target.files[0])
                   }
-                  className="px-4 py-3 border rounded-xl focus:ring-4 focus:ring-green-500 focus:outline-none bg-gray-50"
+                  className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                />
                <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold hover:from-green-600 hover:to-blue-600 transition-all duration-300 disabled:bg-gray-400 shadow-lg"
+                  className="px-6 py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition-all duration-300 disabled:bg-gray-500 shadow-md"
                >
                   {loading ? "Adding..." : "Add Model"}
                </button>

@@ -1,42 +1,72 @@
 "use client";
 
 import withAdminAuth from "@/components/withAdminAuth";
-import { useRouter } from "next/navigation";
+import Sidebar from "./Sidebar";
+import AddCategoryForm from "./CategoryForm";
+import AddModelForm from "./ModelForm";
+import AddProductForm from "./ProductForm";
+
+import { useRef, useState } from "react";
+import CategoryResults from "./CategoryResults";
+import ModelsResults from "./ModelResults";
+import ProductsResults from "./ProductsResults";
 
 const AdminDashboard = () => {
-   const router = useRouter();
+   const categoryFormRef = useRef<HTMLDivElement>(null);
+   const modelFormRef = useRef<HTMLDivElement>(null);
+   const productFormRef = useRef<HTMLDivElement>(null);
+   const [toggleAddedCategory, setToggleAddedCategory] = useState(false);
+   const [toggleAddedModel, setToggleAddedModel] = useState(false);
+   const [toggleAddedProduct, setToggleAddedProduct] = useState(false);
 
+   const handleScrollTo = (formId: string) => {
+      const formRefs: {
+         [key: string]: React.RefObject<HTMLDivElement | null>;
+      } = {
+         "add-category-form": categoryFormRef,
+         "add-model-form": modelFormRef,
+         "add-product-form": productFormRef,
+      };
+
+      formRefs[formId]?.current?.scrollIntoView({ behavior: "smooth" });
+   };
    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-         <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-3xl text-center">
-            <h1 className="text-4xl font-extrabold text-blue-700 mb-6">
-               Admin Dashboard
-            </h1>
-            <p className="text-gray-600 mb-8">
-               Manage categories, models, and products with ease.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <button
-                  onClick={() => router.push("/admin/add-category")}
-                  className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md"
-               >
-                  Add Category
-               </button>
-
-               <button
-                  onClick={() => router.push("/admin/add-model")}
-                  className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-300 shadow-md"
-               >
-                  Add Model
-               </button>
-
-               <button
-                  onClick={() => router.push("/admin/add-product")}
-                  className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md"
-               >
-                  Add Product
-               </button>
+      <div className="flex min-h-screen">
+         <Sidebar onScrollTo={handleScrollTo} />
+         <div className="flex-1 flex flex-col gap-4 bg-gray-900 ">
+            <div
+               ref={categoryFormRef}
+               id="add-category-form"
+               className="flex h-[30rem]"
+            >
+               <AddCategoryForm
+                  setToggleAddedCategory={() =>
+                     setToggleAddedCategory((pre) => !pre)
+                  }
+               />
+               <CategoryResults toggleAddedCategory={toggleAddedCategory} />
+            </div>
+            <div
+               ref={modelFormRef}
+               id="add-model-form"
+               className="flex h-[50rem]"
+            >
+               <AddModelForm
+                  setToggleAddedModel={() => setToggleAddedModel((pre) => !pre)}
+               />
+               <ModelsResults toggleAddedModel={toggleAddedModel} />
+            </div>
+            <div
+               ref={productFormRef}
+               id="add-product-form"
+               className="flex h-[50rem]"
+            >
+               <AddProductForm
+                  setToggleAddedProduct={() =>
+                     setToggleAddedProduct((pre) => !pre)
+                  }
+               />
+               <ProductsResults toggleAddedProduct={toggleAddedProduct} />
             </div>
          </div>
       </div>
