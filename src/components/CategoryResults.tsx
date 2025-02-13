@@ -6,10 +6,14 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Loader from "@/components/Loader";
 import { Category } from "@/types/types";
 
-const CategoryResults = ({
-   toggleAddedCategory,
-}: {
+interface CategoryResultsProps {
    toggleAddedCategory: boolean;
+   onEditCategory: (category: Category) => void;
+}
+
+const CategoryResults: React.FC<CategoryResultsProps> = ({
+   onEditCategory,
+   toggleAddedCategory,
 }) => {
    const [categories, setCategories] = useState<Category[]>([]);
    const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +98,13 @@ const CategoryResults = ({
                               <td className="py-4 px-6 w-1/2 text-gray-800">
                                  {category.title}
                               </td>
-                              <td className="py-4 px-6 text-center w-1/2">
+                              <td className="py-4 px-6 text-center w-1/2 flex justify-center gap-2">
+                                 <button
+                                    onClick={() => onEditCategory(category)}
+                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-shadow shadow-md"
+                                 >
+                                    Edit
+                                 </button>
                                  <button
                                     onClick={() => handleDelete(category.id)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"

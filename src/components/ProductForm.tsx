@@ -2,13 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Category, Model, Category_Models } from "@/types/types";
+import { Category, Model, Category_Models, Product } from "@/types/types";
 
 interface AddProductFormProps {
    setToggleAddedProduct: () => void;
+   selectedProduct: Product | null;
+   clearSelectedProduct: () => void;
 }
 
-const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
+const AddProductForm = ({
+   setToggleAddedProduct,
+   clearSelectedProduct,
+   selectedProduct,
+}: AddProductFormProps) => {
    const [categories, setCategories] = useState<Category[]>([]);
    const [models, setModels] = useState<Model[]>([]);
    const [selectedCategory, setSelectedCategory] = useState("");
@@ -80,6 +86,7 @@ const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
 
       fetchCategoriesAndModels();
    }, [supabase]);
+
    useEffect(() => {
       if (selectedCategory) {
          console.log(
@@ -106,6 +113,17 @@ const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
       }
    }, [selectedCategory, models, categoryModels]);
 
+   useEffect(() => {
+      if (selectedProduct) {
+         setTitle(selectedProduct.title);
+         setDescription(selectedProduct.description);
+         setRatingVal(selectedProduct.rating_value);
+         setRatingUnit(selectedProduct.rating_unit);
+         setSelectedCategory(selectedProduct.category.toString());
+         setSelectedModel(selectedProduct.model.toString());
+      }
+   }, [selectedProduct]);
+
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setLoading(true);
@@ -126,27 +144,51 @@ const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
             imgUrl = uploadResponse.data.publicUrl;
          }
          const slug = title.toLowerCase().replace(" ", "-");
-         const { data, error } = await supabase
-            .from("products")
-            .insert([
-               {
+
+         if (selectedProduct) {
+            // Update existing product
+            const { data, error } = await supabase
+               .from("products")
+               .update({
                   title,
-                  image: imgUrl,
+                  image: imgUrl ? imgUrl : selectedProduct.image,
                   description,
                   category: selectedCategory,
                   model: selectedModel,
                   slug,
                   rating_value: ratingVal,
                   rating_unit: ratingUnit,
-               },
-            ])
-            .select();
-         console.log("DEBUG: ~ handleSubmit ~ data:", data);
+               })
+               .eq("id", selectedProduct.id)
+               .select();
 
-         if (error) throw error;
+            if (error) throw error;
+            console.log("DEBUG: ~ handleSubmit ~ data:", data);
+            alert("Product updated successfully!");
+         } else {
+            const { data, error } = await supabase
+               .from("products")
+               .insert([
+                  {
+                     title,
+                     image: imgUrl,
+                     description,
+                     category: selectedCategory,
+                     model: selectedModel,
+                     slug,
+                     rating_value: ratingVal,
+                     rating_unit: ratingUnit,
+                  },
+               ])
+               .select();
+            console.log("DEBUG: ~ handleSubmit ~ data:", data);
 
-         alert("Product added successfully!");
+            if (error) throw error;
+
+            alert("Product added successfully!");
+         }
          setToggleAddedProduct();
+         clearSelectedProduct();
 
          setTitle("");
          setSelectedCategory("");
@@ -166,7 +208,7 @@ const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
       <div className="flex items-center justify-center  bg-gray-900 w-[90%]">
          <div className="bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-lg border border-gray-700">
             <h1 className="text-3xl font-bold text-center text-white mb-6">
-               Add Product
+               {selectedProduct ? "Edit Product" : "Add Product"}
             </h1>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                <select
@@ -246,7 +288,13 @@ const AddProductForm = ({ setToggleAddedProduct }: AddProductFormProps) => {
                   disabled={loading}
                   className="px-6 py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition-all duration-300 disabled:bg-gray-500 shadow-md"
                >
-                  {loading ? "Adding..." : "Add Product"}
+                  {loading
+                     ? selectedProduct
+                        ? "Updating..."
+                        : "Adding..."
+                     : selectedProduct
+                     ? "Update Product"
+                     : "Add Product"}
                </button>
             </form>
          </div>

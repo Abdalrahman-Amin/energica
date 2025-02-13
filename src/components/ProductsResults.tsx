@@ -5,10 +5,14 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Loader from "@/components/Loader";
 import { Product } from "@/types/types";
 
-const ProductsResults = ({
-   toggleAddedProduct,
-}: {
+interface ProductsResultsProps {
    toggleAddedProduct: boolean;
+   onEditProduct: (product: Product) => void;
+}
+
+const ProductsResults: React.FC<ProductsResultsProps> = ({
+   toggleAddedProduct,
+   onEditProduct,
 }) => {
    const [products, setProducts] = useState<Product[]>([]);
    const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +93,13 @@ const ProductsResults = ({
                               <td className="py-4 px-6 w-1/2 text-gray-800">
                                  {product.title}
                               </td>
-                              <td className="py-4 px-6 text-center w-1/2">
+                              <td className="py-4 px-6 text-center w-1/2 flex justify-center gap-2">
+                                 <button
+                                    onClick={() => onEditProduct(product)}
+                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-shadow shadow-md"
+                                 >
+                                    Edit
+                                 </button>
                                  <button
                                     onClick={() => handleDelete(product.id)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"

@@ -5,7 +5,14 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Loader from "@/components/Loader";
 import { Model } from "@/types/types";
 
-const ModelsResults = ({ toggleAddedModel }: { toggleAddedModel: boolean }) => {
+interface ModelsResultsProps {
+   toggleAddedModel: boolean;
+   onEditModel: (model: Model) => void;
+}
+const ModelsResults: React.FC<ModelsResultsProps> = ({
+   toggleAddedModel,
+   onEditModel,
+}) => {
    const [models, setModels] = useState<Model[]>([]);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
@@ -82,7 +89,13 @@ const ModelsResults = ({ toggleAddedModel }: { toggleAddedModel: boolean }) => {
                               <td className="py-4 px-6 w-1/2 text-gray-800">
                                  {model.title}
                               </td>
-                              <td className="py-4 px-6 text-center w-1/2">
+                              <td className="py-4 px-6 text-center w-1/2 flex justify-center gap-2">
+                                 <button
+                                    onClick={() => onEditModel(model)}
+                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-shadow shadow-md"
+                                 >
+                                    Edit
+                                 </button>
                                  <button
                                     onClick={() => handleDelete(model.id)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"

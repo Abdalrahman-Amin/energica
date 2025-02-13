@@ -1,14 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Category } from "@/types/types";
+import { Category, Model } from "@/types/types";
+// import { set } from "lodash";
 
 interface AddModelFormProps {
    setToggleAddedModel: () => void;
+   selectedModel: Model | null;
+   clearSelectedModel: () => void;
 }
 
-const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
+const AddModelForm: React.FC<AddModelFormProps> = ({
+   setToggleAddedModel,
+   clearSelectedModel,
+   selectedModel,
+}) => {
    const [categories, setCategories] = useState<Category[]>([]);
    const [selectedCategory, setSelectedCategory] = useState("");
    const [ratingVal, setRatingVal] = useState(0);
@@ -29,6 +36,28 @@ const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
 
       fetchCategories();
    }, [supabase]);
+
+   useEffect(() => {
+      if (selectedModel) {
+         setTitle(selectedModel.title);
+         setDescription(selectedModel.description);
+         setRatingVal(selectedModel.rating_value);
+         setRatingUnit(selectedModel.rating_unit);
+         // setImageUrl(selectedModel.image);
+         // setPdfFileUrl(selectedModel.pdf_url);
+         // Fetch the category linked to the model
+         const fetchCategoryModel = async () => {
+            const { data, error } = await supabase
+               .from("category_models")
+               .select("category_id")
+               .eq("model_id", selectedModel.id)
+               .single();
+            if (error) console.error("Error fetching category model:", error);
+            else setSelectedCategory(data.category_id.toString());
+         };
+         fetchCategoryModel();
+      }
+   }, [selectedModel, supabase]);
 
    const handlePdfUpload = async (
       file: File,
@@ -87,35 +116,64 @@ const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
             imgUrl = uploadResponse.data.publicUrl;
          }
 
-         // Insert the model into the database
-         const { data: modelData, error: modelError } = await supabase
-            .from("models")
-            .insert([
-               {
+         if (selectedModel) {
+            const { data: modelData, error: modelError } = await supabase
+               .from("models")
+               .update({
                   title,
                   slug: title.toLowerCase().replace(" ", "-"),
                   description,
-                  image: imgUrl,
-                  pdf_url: pdfUrl,
+                  image: imgUrl ? imgUrl : selectedModel.image,
+                  pdf_url: pdfUrl ? pdfUrl : selectedModel.pdf_url,
                   rating_value: ratingVal,
                   rating_unit: ratingUnit,
-               },
-            ])
-            .select();
+               })
+               .eq("id", selectedModel.id)
+               .select();
 
-         if (modelError) throw modelError;
+            if (modelError) throw modelError;
 
-         // Link the model to the selected category
-         const { error: linkError } = await supabase
-            .from("category_models")
-            .insert([
-               { category_id: selectedCategory, model_id: modelData[0].id },
-            ]);
+            // Update the category_models table
+            const { error: linkError } = await supabase
+               .from("category_models")
+               .update({ category_id: selectedCategory })
+               .eq("model_id", selectedModel.id);
 
-         if (linkError) throw linkError;
+            if (linkError) throw linkError;
+            console.log(modelData);
+            alert("Model updated successfully!");
+         } else {
+            // Insert the model into the database
+            const { data: modelData, error: modelError } = await supabase
+               .from("models")
+               .insert([
+                  {
+                     title,
+                     slug: title.toLowerCase().replace(" ", "-"),
+                     description,
+                     image: imgUrl,
+                     pdf_url: pdfUrl,
+                     rating_value: ratingVal,
+                     rating_unit: ratingUnit,
+                  },
+               ])
+               .select();
 
-         alert("Model added successfully!");
+            if (modelError) throw modelError;
+
+            // Link the model to the selected category
+            const { error: linkError } = await supabase
+               .from("category_models")
+               .insert([
+                  { category_id: selectedCategory, model_id: modelData[0].id },
+               ]);
+
+            if (linkError) throw linkError;
+
+            alert("Model added successfully!");
+         }
          setToggleAddedModel();
+         clearSelectedModel();
 
          setTitle("");
          setDescription("");
@@ -136,7 +194,7 @@ const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
       <div className="flex items-center justify-center bg-gray-900 w-[90%]">
          <div className="bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-lg border border-gray-700">
             <h1 className="text-3xl font-bold text-center text-white mb-6">
-               Add Model
+               {selectedModel ? "Edit Model" : "Add Model"}
             </h1>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                <select
@@ -211,7 +269,13 @@ const AddModelForm = ({ setToggleAddedModel }: AddModelFormProps) => {
                   disabled={loading}
                   className="px-6 py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition-all duration-300 disabled:bg-gray-500 shadow-md"
                >
-                  {loading ? "Adding..." : "Add Model"}
+                  {loading
+                     ? selectedModel
+                        ? "Updating..."
+                        : "Adding..."
+                     : selectedModel
+                     ? "Update Model"
+                     : "Add Model"}
                </button>
             </form>
          </div>
