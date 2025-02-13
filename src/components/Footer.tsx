@@ -1,7 +1,7 @@
 "use client";
 import useCategoryStore from "@/store/useCategoryStore";
 import { usePathname } from "next/navigation";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+// import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
    const { categories } = useCategoryStore();
@@ -55,7 +55,7 @@ const Footer = () => {
                </div>
 
                {/* Social Media Section */}
-               <div className="space-y-4">
+               {/* <div className="space-y-4">
                   <h3 className="text-xl font-bold">Follow Us</h3>
                   <div className="flex space-x-4">
                      <a
@@ -91,7 +91,7 @@ const Footer = () => {
                         <FaLinkedin size={24} />
                      </a>
                   </div>
-               </div>
+               </div> */}
             </div>
 
             {/* Copyright Section */}

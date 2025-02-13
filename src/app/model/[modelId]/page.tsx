@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Category, Model, Product } from "@/types/types";
+import Loader from "@/components/Loader";
 
 const ModelsProducts = () => {
    const { modelId } = useParams();
@@ -77,11 +78,7 @@ const ModelsProducts = () => {
    };
 
    if (isLoading) {
-      return (
-         <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-         </div>
-      );
+      return <Loader />;
    }
 
    if (error) {
@@ -93,7 +90,7 @@ const ModelsProducts = () => {
    }
 
    return (
-      <div className="container mx-auto px-4 py-8 mt-56">
+      <div className="container mx-auto px-4 py-8 mt-48">
          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
             Products for Category:{" "}
             <span className="text-blue-600">{category?.title}</span> and Model:{" "}

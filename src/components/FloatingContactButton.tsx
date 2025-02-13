@@ -55,17 +55,6 @@ const FloatingContactButton = () => {
             }`}
          >
             <div className="space-y-3">
-               {/* <div className="flex items-center space-x-2">
-                  <FaWhatsapp className="h-5 w-5 text-green-500" />
-                  <a
-                     href="https://wa.me/+2001012731091"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="text-gray-700 hover:text-blue-600"
-                  >
-                     WhatsApp
-                  </a>
-               </div> */}
                <div className="flex items-center space-x-2">
                   <FaEnvelope className="h-5 w-5 text-red-500" />
                   <a
@@ -78,7 +67,7 @@ const FloatingContactButton = () => {
                <div className="flex items-center space-x-2">
                   <FaPhone className="h-5 w-5 text-blue-500" />
                   <a
-                     href="tel:+2001012731091"
+                     href="tel:+2001070708070"
                      className="text-gray-700 hover:text-blue-600"
                   >
                      Call
