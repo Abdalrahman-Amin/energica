@@ -12,6 +12,7 @@ import ModelsResults from "./ModelResults";
 import ProductsResults from "./ProductsResults";
 import { Category, Model, Product } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { usePathname, useRouter } from "next/navigation";
 
 const AdminDashboard = () => {
    const categoryFormRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,10 @@ const AdminDashboard = () => {
    );
    const [selectedModel, setSelectedModel] = useState<Model | null>(null);
    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+   const supabase = createClientComponentClient();
+   const router = useRouter();
+   const pathname = usePathname();
+   console.log("DEBUG: ~ AdminDashboard ~ pathname:", pathname);
 
    const handleScrollTo = (formId: string) => {
       const formRefs: {
@@ -64,11 +69,15 @@ const AdminDashboard = () => {
    };
 
    const handleLogout = async () => {
-      const supabase = createClientComponentClient();
       await supabase.auth.signOut();
-      window.location.href = "/admin/login"; // Redirect to login page after logout
+      router.push("/admin/login"); // Redirect to login page after logout
    };
 
+   // useEffect(() => {
+   //    if (!pathname.includes("/admin/login")) {
+   //       handleLogout();
+   //    }
+   // }, [pathname]);
    return (
       <div className="flex min-h-screen flex-col md:flex-row">
          {/* Sidebar: Hidden on small screens */}

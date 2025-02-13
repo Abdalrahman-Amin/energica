@@ -5,7 +5,7 @@ export default function Login() {
    return (
       <>
          <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-            <BackButton />
+            <BackButton text="Home" icon={false} />
          </div>
          <AdminLogin />
       </>

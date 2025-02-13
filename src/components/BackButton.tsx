@@ -1,12 +1,16 @@
 "use client"; // Mark this as a Client Component
 import { useRouter } from "next/navigation";
 
-export default function BackButton({ text = "Go Back", icon = true }) {
+export default function BackButton({
+   text = "Go Back",
+   icon = true,
+   routeTo = "/",
+}) {
    const router = useRouter();
 
    return (
       <button
-         onClick={() => router.back()}
+         onClick={() => router.push(routeTo)}
          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
          aria-label="Go back to the previous page"
       >
