@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-   /* config options here */
    images: {
-      domains: ["qaufbqytrhwgeteijboz.supabase.co", "picsum.photos"], // ✅ Add your Supabase domain
+      remotePatterns: [
+         {
+            protocol: "https",
+            hostname: "**", // Allows images from any domain
+         },
+      ],
    },
 };
 
