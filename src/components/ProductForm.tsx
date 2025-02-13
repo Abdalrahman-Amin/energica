@@ -205,12 +205,13 @@ const AddProductForm = ({
    };
 
    return (
-      <div className="flex items-center justify-center  bg-gray-900 w-[90%]">
-         <div className="bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-lg border border-gray-700">
-            <h1 className="text-3xl font-bold text-center text-white mb-6">
+      <div className="flex items-center justify-center bg-gray-900 w-full">
+         <div className="bg-gray-800 shadow-xl rounded-2xl p-6 w-full max-w-md sm:max-w-lg border border-gray-700">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-center text-white mb-4">
                {selectedProduct ? "Edit Product" : "Add Product"}
             </h1>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+               {/* Category Selection */}
                <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
@@ -226,6 +227,8 @@ const AddProductForm = ({
                      </option>
                   ))}
                </select>
+
+               {/* Model Selection */}
                <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
@@ -241,6 +244,8 @@ const AddProductForm = ({
                      </option>
                   ))}
                </select>
+
+               {/* Title Input */}
                <input
                   type="text"
                   placeholder="Title"
@@ -249,24 +254,28 @@ const AddProductForm = ({
                   className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                   required
                />
-               {/* <div className="flex gap-4"> */}
-               <input
-                  type="number"
-                  placeholder="Rating Value"
-                  value={ratingVal}
-                  onChange={(e) => setRatingVal(Number(e.target.value))}
-                  className=" px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
-                  required
-               />
-               <input
-                  type="text"
-                  placeholder="Rating Unit"
-                  value={ratingUnit}
-                  onChange={(e) => setRatingUnit(e.target.value)}
-                  className=" px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
-                  required
-               />
-               {/* </div> */}
+
+               {/* Rating Inputs (Value & Unit) */}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                     type="number"
+                     placeholder="Rating Value"
+                     value={ratingVal}
+                     onChange={(e) => setRatingVal(Number(e.target.value))}
+                     className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+                     required
+                  />
+                  <input
+                     type="text"
+                     placeholder="Rating Unit"
+                     value={ratingUnit}
+                     onChange={(e) => setRatingUnit(e.target.value)}
+                     className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+                     required
+                  />
+               </div>
+
+               {/* Image Upload */}
                <label className="text-gray-300 font-medium">Upload Image</label>
                <input
                   type="file"
@@ -276,6 +285,8 @@ const AddProductForm = ({
                   }
                   className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                />
+
+               {/* Description */}
                <textarea
                   placeholder="Description"
                   value={description}
@@ -283,6 +294,8 @@ const AddProductForm = ({
                   className="px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
                   required
                ></textarea>
+
+               {/* Submit Button */}
                <button
                   type="submit"
                   disabled={loading}

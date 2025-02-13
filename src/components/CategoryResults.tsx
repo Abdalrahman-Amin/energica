@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-// import Link from "next/link";
 import Loader from "@/components/Loader";
 import { Category } from "@/types/types";
 
@@ -29,7 +28,7 @@ const CategoryResults: React.FC<CategoryResultsProps> = ({
             if (error) throw error;
             setCategories(data);
          } catch (error) {
-            console.error("Error fetching categories:", error);
+            console.log("DEBUG: ~ fetchCategories ~ error:", error);
             setError("Failed to fetch categories. Please try again later.");
          } finally {
             setIsLoading(false);
@@ -37,13 +36,10 @@ const CategoryResults: React.FC<CategoryResultsProps> = ({
       };
 
       fetchCategories();
-   }, [supabase, toggleAddedCategory]);
+   }, [toggleAddedCategory, supabase]);
 
    const handleDelete = async (id: number) => {
-      const confirmDelete = confirm(
-         "Are you sure you want to delete this category?"
-      );
-      if (!confirmDelete) return;
+      if (!confirm("Are you sure you want to delete this category?")) return;
 
       try {
          const { error } = await supabase
@@ -53,69 +49,60 @@ const CategoryResults: React.FC<CategoryResultsProps> = ({
          if (error) throw error;
          setCategories(categories.filter((category) => category.id !== id));
       } catch (error) {
-         console.error("Error deleting category:", error);
+         console.log("DEBUG: ~ handleDelete ~ error:", error);
          setError("Failed to delete category. Please try again later.");
       }
    };
 
    if (isLoading) return <Loader />;
-
-   if (error) {
-      return (
-         <div className="flex justify-center items-center h-screen">
-            <p className="text-red-500 text-lg">{error}</p>
-         </div>
-      );
-   }
+   if (error)
+      return <p className="text-red-500 text-lg text-center">{error}</p>;
 
    return (
-      <div className="container mx-auto px-4 py-12 bg-gray-900 min-h-screen w-[50rem]">
-         <h1 className="text-3xl font-bold text-white mb-6 text-center">
+      <div className="container mx-auto px-4 py-6 bg-gray-900 w-full">
+         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center">
             Categories
          </h1>
          <div className="bg-gray-50 shadow-lg rounded-xl overflow-hidden">
-            {/* Wrapping the table for horizontal scrolling */}
+            {/* Scrollable container for better mobile UX */}
             <div className="overflow-x-auto">
                <table className="min-w-full border-collapse">
                   <thead className="bg-gray-200 border-b sticky top-0">
-                     <tr className="flex w-full">
-                        <th className="py-4 px-6 text-left font-semibold text-gray-700 w-1/2">
+                     <tr className="w-full flex">
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700 w-2/5">
                            Title
                         </th>
-                        <th className="py-4 px-6 text-center font-semibold text-gray-700 w-1/2">
+                        <th className="py-3 px-4 text-center font-semibold text-gray-700 w-3/5">
                            Actions
                         </th>
                      </tr>
                   </thead>
-                  {/* Scrollable tbody */}
-                  <div className="h-[15rem] overflow-y-auto block w-full custom-scrollbar">
-                     <tbody className="block w-full">
-                        {categories.map((category) => (
-                           <tr
-                              key={category.id}
-                              className="flex w-full border-b hover:bg-gray-100 transition"
-                           >
-                              <td className="py-4 px-6 w-1/2 text-gray-800">
-                                 {category.title}
-                              </td>
-                              <td className="py-4 px-6 text-center w-1/2 flex justify-center gap-2">
-                                 <button
-                                    onClick={() => onEditCategory(category)}
-                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-shadow shadow-md"
-                                 >
-                                    Edit
-                                 </button>
-                                 <button
-                                    onClick={() => handleDelete(category.id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"
-                                 >
-                                    Delete
-                                 </button>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </div>
+                  <tbody className="block w-full h-[15rem] overflow-y-auto">
+                     {categories.map((category) => (
+                        <tr
+                           key={category.id}
+                           className="w-full flex border-b hover:bg-gray-100 transition"
+                        >
+                           <td className="py-3 px-4 w-2/5 text-gray-800">
+                              {category.title}
+                           </td>
+                           <td className="py-3 px-4 w-3/5 flex flex-col sm:flex-row justify-center gap-2">
+                              <button
+                                 onClick={() => onEditCategory(category)}
+                                 className="bg-yellow-500 text-white px-3 py-2 rounded-md hover:bg-yellow-600 transition"
+                              >
+                                 Edit
+                              </button>
+                              <button
+                                 onClick={() => handleDelete(category.id)}
+                                 className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 transition"
+                              >
+                                 Delete
+                              </button>
+                           </td>
+                        </tr>
+                     ))}
+                  </tbody>
                </table>
             </div>
          </div>

@@ -68,20 +68,28 @@ const AdminDashboard = () => {
       await supabase.auth.signOut();
       window.location.href = "/login"; // Redirect to login page after logout
    };
+
    return (
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen flex-col md:flex-row">
+         {/* Sidebar: Hidden on small screens */}
          <Sidebar onScrollTo={handleScrollTo} />
-         <div className="flex-1 flex flex-col gap-4 bg-gray-900 ">
-            <button
-               onClick={handleLogout}
-               className="self-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"
-            >
-               Logout
-            </button>
+
+         <div className="flex-1 flex flex-col gap-4 bg-gray-900 p-4 sm:ml-0 md:ml-64">
+            {/* Logout button */}
+            <div className="flex justify-end md:justify-end">
+               <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"
+               >
+                  Logout
+               </button>
+            </div>
+
+            {/* Forms & Results: Responsive grid */}
             <div
                ref={categoryFormRef}
                id="add-category-form"
-               className="flex h-[30rem]"
+               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
                <AddCategoryForm
                   setToggleAddedCategory={() =>
@@ -95,10 +103,11 @@ const AdminDashboard = () => {
                   onEditCategory={handleEditCategory}
                />
             </div>
+
             <div
                ref={modelFormRef}
                id="add-model-form"
-               className="flex h-[50rem]"
+               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
                <AddModelForm
                   setToggleAddedModel={() => setToggleAddedModel((pre) => !pre)}
@@ -110,10 +119,11 @@ const AdminDashboard = () => {
                   onEditModel={handleEditModel}
                />
             </div>
+
             <div
                ref={productFormRef}
                id="add-product-form"
-               className="flex h-[50rem]"
+               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
                <AddProductForm
                   setToggleAddedProduct={() =>

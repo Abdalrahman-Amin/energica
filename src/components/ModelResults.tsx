@@ -62,51 +62,50 @@ const ModelsResults: React.FC<ModelsResultsProps> = ({
    }
 
    return (
-      <div className="container mx-auto px-4 py-12 bg-gray-900 min-h-screen w-[50rem]">
-         <h1 className="text-3xl font-bold text-white mb-6 text-center">
+      <div className="container mx-auto px-4 py-6 bg-gray-900 min-h-screen w-full max-w-4xl">
+         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center">
             Models
          </h1>
          <div className="bg-gray-50 shadow-lg rounded-xl overflow-hidden">
+            {/* Scrollable container for smaller screens */}
             <div className="overflow-x-auto">
                <table className="min-w-full border-collapse">
                   <thead className="bg-gray-200 border-b sticky top-0">
-                     <tr className="flex w-full">
-                        <th className="py-4 px-6 text-left font-semibold text-gray-700 w-1/2">
+                     <tr className="grid grid-cols-1 sm:grid-cols-2 w-full">
+                        <th className="py-3 px-4 text-left font-semibold text-gray-700">
                            Title
                         </th>
-                        <th className="py-4 px-6 text-center font-semibold text-gray-700 w-1/2">
+                        <th className="py-3 px-4 text-center font-semibold text-gray-700">
                            Actions
                         </th>
                      </tr>
                   </thead>
-                  <div className="h-[30rem] overflow-y-auto block w-full custom-scrollbar">
-                     <tbody className="block w-full">
-                        {models.map((model) => (
-                           <tr
-                              key={model.id}
-                              className="flex w-full border-b hover:bg-gray-100 transition"
-                           >
-                              <td className="py-4 px-6 w-1/2 text-gray-800">
-                                 {model.title}
-                              </td>
-                              <td className="py-4 px-6 text-center w-1/2 flex justify-center gap-2">
-                                 <button
-                                    onClick={() => onEditModel(model)}
-                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-shadow shadow-md"
-                                 >
-                                    Edit
-                                 </button>
-                                 <button
-                                    onClick={() => handleDelete(model.id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-shadow shadow-md"
-                                 >
-                                    Delete
-                                 </button>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </div>
+                  <tbody className="block w-full h-[15rem] overflow-y-auto">
+                     {models.map((model) => (
+                        <tr
+                           key={model.id}
+                           className="grid grid-cols-1 sm:grid-cols-2 border-b hover:bg-gray-100 transition"
+                        >
+                           <td className="py-3 px-4 text-gray-800">
+                              {model.title}
+                           </td>
+                           <td className="py-3 px-4 flex flex-col sm:flex-row justify-center gap-2">
+                              <button
+                                 onClick={() => onEditModel(model)}
+                                 className="bg-yellow-500 text-white px-3 py-2 rounded-md hover:bg-yellow-600 transition"
+                              >
+                                 Edit
+                              </button>
+                              <button
+                                 onClick={() => handleDelete(model.id)}
+                                 className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 transition"
+                              >
+                                 Delete
+                              </button>
+                           </td>
+                        </tr>
+                     ))}
+                  </tbody>
                </table>
             </div>
          </div>

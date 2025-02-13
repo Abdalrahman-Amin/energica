@@ -31,25 +31,24 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
 
       try {
          if (selectedCategory) {
-            // Update existing category
-            const { data, error } = await supabase
+            const { error } = await supabase
                .from("categories")
-               .update({ title, slug: title.toLowerCase().replace(" ", "-") })
-               .eq("id", selectedCategory.id)
-               .select();
-            console.log("DEBUG: ~ handleSubmit ~ data:", data);
+               .update({
+                  title,
+                  slug: title.toLowerCase().replace(/\s+/g, "-"),
+               })
+               .eq("id", selectedCategory.id);
 
             if (error) throw error;
             alert("Category updated successfully!");
          } else {
-            const { data, error } = await supabase
+            const { error } = await supabase
                .from("categories")
-               .insert([{ title, slug: title.toLowerCase().replace(" ", "-") }])
-               .select();
-            console.log("DEBUG: ~ handleSubmit ~ data:", data);
+               .insert([
+                  { title, slug: title.toLowerCase().replace(/\s+/g, "-") },
+               ]);
 
             if (error) throw error;
-
             alert("Category added successfully!");
          }
 
@@ -57,7 +56,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
          setToggleAddedCategory();
          clearSelectedCategory();
       } catch (error) {
-         console.error("Error adding category:", error);
+         console.log("DEBUG: ~ handleSubmit ~ error:", error);
          alert("Failed to add category.");
       } finally {
          setLoading(false);
@@ -65,12 +64,12 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
    };
 
    return (
-      <div className="flex items-center justify-center  bg-gray-900 text-white w-[90%]">
-         <div className="bg-gray-800 shadow-xl rounded-lg p-8 w-full max-w-lg border border-gray-700">
-            <h1 className="text-3xl font-semibold text-center text-gray-200 mb-6">
+      <div className="flex items-center justify-center bg-gray-900 text-white w-full">
+         <div className="bg-gray-800 shadow-xl rounded-lg p-6 w-full max-w-md sm:max-w-lg border border-gray-700">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-center text-gray-200 mb-4">
                {selectedCategory ? "Edit Category" : "Add Category"}
             </h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                <input
                   type="text"
                   placeholder="Title"
