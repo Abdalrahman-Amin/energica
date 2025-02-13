@@ -27,6 +27,7 @@ function Navbar() {
    const router = useRouter();
    const [openCategory, setOpenCategory] = useState<number | null>(null);
    const buttonRef = useRef<HTMLDivElement>(null);
+   const searchRef = useRef<HTMLDivElement>(null);
    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
    useEffect(() => {
@@ -36,16 +37,24 @@ function Navbar() {
          // ||
          // searchResults.products.length > 0
       ) {
-         setIsSearchOpen(true);
+         if (searchQuery.length > 1) {
+            setIsSearchOpen(true);
+         } else {
+            setIsSearchOpen(false);
+         }
       }
-   }, [searchResults.categories.length, searchResults.models.length]);
+   }, [
+      searchResults.categories.length,
+      searchResults.models.length,
+      searchQuery,
+   ]);
 
    const handleToggle = (categoryId: number) => {
       setOpenCategory(openCategory === categoryId ? null : categoryId);
    };
 
    const handleSearch = async (query: string) => {
-      if (query.length > 2) {
+      if (query.length > 1) {
          await fetchSearchResults(query);
       }
    };
@@ -69,11 +78,23 @@ function Navbar() {
          setOpenCategory(null);
       }
    };
+   const handleClickOutsideSearch = (event: MouseEvent) => {
+      if (
+         searchRef.current &&
+         !searchRef.current.contains(event.target as Node)
+      ) {
+         setIsSearchOpen(false);
+      } else {
+         setIsSearchOpen(true);
+      }
+   };
 
    useEffect(() => {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutsideSearch);
       return () => {
          document.removeEventListener("mousedown", handleClickOutside);
+         document.removeEventListener("mousedown", handleClickOutsideSearch);
       };
    }, []);
 
@@ -163,7 +184,10 @@ function Navbar() {
             </Link>
 
             {/* Search Bar */}
-            <div className="relative flex items-center w-full max-w-md md:max-w-lg my-3 md:my-0 mx-2">
+            <div
+               className="relative flex items-center w-full max-w-md md:max-w-lg my-3 md:my-0 mx-2"
+               ref={searchRef}
+            >
                <Image
                   src={searchIcon}
                   alt="search"
