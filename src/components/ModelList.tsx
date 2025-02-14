@@ -77,7 +77,7 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          {canScrollLeft && (
             <button
                onClick={scrollLeft}
-               className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+               className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-transparent text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
             >
                <FaArrowLeft className="w-6 h-6" />
             </button>
@@ -87,7 +87,7 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          {canScrollRight && (
             <button
                onClick={scrollRight}
-               className="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+               className="absolute -right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-transparent text-black flex items-center justify-center rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
             >
                <FaArrowRight className="w-6 h-6" />
             </button>
