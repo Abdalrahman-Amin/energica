@@ -166,6 +166,9 @@ function Navbar() {
       categories.forEach((category) => {
          fetchModelsForCategory(category.id);
       });
+      if (categories.length > 0) {
+         setActiveSection(categories[0].title);
+      }
    }, [categories, fetchModelsForCategory]);
    if (pathname.includes("/admin")) return null;
 
