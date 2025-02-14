@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
    title: "متجر إنرجيكا",
    description: "تسوق أحدث الأجهزة في مصر",
+   icons: {
+      icon: "/logo.png", // Default icon
+   },
 };
 
 export default function RootLayout({
