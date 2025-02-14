@@ -6,6 +6,7 @@ import { Category as categoryType } from "@/types/types";
 import { Model } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Loader from "./Loader";
+import { FaAngleRight } from "react-icons/fa6";
 
 interface CategoryProps {
    category: categoryType;
@@ -70,9 +71,10 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                </h2>
                <a
                   href={`/category/${slug}`}
-                  className="text-lg text-blue-600 font-medium hover:text-blue-700 underline underline-offset-4 hover:underline transition-all duration-200"
+                  className=" flex items-center text-lg text-blue-600 font-medium hover:text-blue-700  transition-all duration-200"
                >
-                  See all →
+                  <span>See all</span>
+                  <FaAngleRight />
                </a>
             </div>
 
