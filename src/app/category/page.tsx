@@ -11,6 +11,10 @@ const AllCategoriesPage = () => {
    const [products, setProducts] = useState<Product[]>([]);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
+   const [selectedCategory, setSelectedCategory] = useState<string | null>(
+      null
+   ); // For category filter
+   const [selectedModel, setSelectedModel] = useState<string | null>(null); // For model filter
    const supabase = createClientComponentClient();
 
    useEffect(() => {
@@ -69,6 +73,51 @@ const AllCategoriesPage = () => {
       window.open(url, "_blank");
    };
 
+   // Filter products based on selected category and model
+   const filteredProducts = products.filter((product) => {
+      const matchesCategory = selectedCategory
+         ? product.category === Number(selectedCategory)
+         : true;
+      const matchesModel = selectedModel
+         ? product.model === Number(selectedModel)
+         : true;
+      return matchesCategory && matchesModel;
+   });
+
+   // Group filtered products by model and category
+   const categoriesWithProductsAndModels = categories
+      .map((category) => {
+         const categoryProducts = filteredProducts.filter(
+            (product) => product.category === category.id
+         );
+         const categoryModels = models.filter((model) =>
+            categoryProducts.some((product) => product.model === model.id)
+         );
+
+         return {
+            category,
+            models: categoryModels.map((model) => ({
+               model,
+               products: categoryProducts.filter(
+                  (product) => product.model === model.id
+               ),
+            })),
+         };
+      })
+      .filter(({ models }) => models.length > 0); // Remove categories with no products
+
+   // Create a map of models to their categories
+   const modelCategoryMap = models.reduce((map, model) => {
+      const product = products.find((p) => p.model === model.id);
+      if (product) {
+         const category = categories.find((c) => c.id === product.category);
+         if (category) {
+            map[model.id] = category.title;
+         }
+      }
+      return map;
+   }, {} as Record<number, string>);
+
    if (isLoading) {
       return <Loader size="lg" />;
    }
@@ -89,31 +138,43 @@ const AllCategoriesPage = () => {
       );
    }
 
-   // Group products by model and category
-   const categoriesWithProductsAndModels = categories.map((category) => {
-      const categoryProducts = products.filter(
-         (product) => product.category === category.id
-      );
-      const categoryModels = models.filter((model) =>
-         categoryProducts.some((product) => product.model === model.id)
-      );
-
-      return {
-         category,
-         models: categoryModels.map((model) => ({
-            model,
-            products: categoryProducts.filter(
-               (product) => product.model === model.id
-            ),
-         })),
-      };
-   });
-
    return (
       <div className="container mx-auto px-4 py-10 mt-32">
          <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
             Explore All Categories
          </h1>
+
+         {/* Filter Section */}
+         <div className="flex flex-wrap gap-4 mb-8">
+            <select
+               value={selectedCategory || ""}
+               onChange={(e) => setSelectedCategory(e.target.value || null)}
+               className="p-2 border border-gray-300 rounded-md"
+            >
+               <option value="">All Categories</option>
+               {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                     {category.title}
+                  </option>
+               ))}
+            </select>
+
+            <select
+               value={selectedModel || ""}
+               onChange={(e) => setSelectedModel(e.target.value || null)}
+               className="p-2 border border-gray-300 rounded-md"
+            >
+               <option value="">All Models</option>
+               {models.map((model) => (
+                  <option key={model.id} value={model.id}>
+                     {model.title} (
+                     {modelCategoryMap[model.id] || "Unknown Category"})
+                  </option>
+               ))}
+            </select>
+         </div>
+
+         {/* Display Filtered Products */}
          {categoriesWithProductsAndModels.map(({ category, models }) => (
             <div key={category.id} className="mb-10">
                <h2 className="text-2xl font-bold text-gray-800 border-b-2 border-gray-300 pb-2 mb-6 uppercase">
