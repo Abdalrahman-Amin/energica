@@ -7,6 +7,7 @@ import { Model } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Loader from "./Loader";
 import { FaAngleRight } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 interface CategoryProps {
    category: categoryType;
@@ -18,7 +19,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
    const supabase = createClientComponentClient();
-
+   const router = useRouter();
    useEffect(() => {
       const fetchModels = async () => {
          try {
@@ -46,6 +47,10 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
       fetchModels();
    }, [category.id, supabase]);
 
+   const handleNavigation = (id: number) => {
+      router.push(`/category#category-${id}`);
+   };
+
    if (isLoading) {
       return <Loader size="lg" />;
    }
@@ -66,16 +71,19 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
          >
             {/* Header: Category Title + Link */}
             <div className="flex flex-wrap items-center justify-between border-b border-gray-300 pb-4 mb-6 ">
-               <h2 className="text-3xl font-bold text-blue-700 tracking-wide cursor-pointer">
-                  <a href={`/category/${slug}`}>{category.title}</a>
+               <h2
+                  className="text-3xl font-bold text-blue-700 tracking-wide cursor-pointer"
+                  onClick={() => handleNavigation(category.id)}
+               >
+                  {category.title}
                </h2>
-               <a
-                  href={`/category/${slug}`}
-                  className=" flex items-center text-lg text-blue-600 font-medium hover:text-blue-700  transition-all duration-200"
+               <div
+                  onClick={() => handleNavigation(category.id)}
+                  className=" flex items-center text-lg text-blue-600 font-medium hover:text-blue-700 cursor-pointer transition-all duration-200"
                >
                   <span>See all</span>
                   <FaAngleRight />
-               </a>
+               </div>
             </div>
 
             {/* Product List */}

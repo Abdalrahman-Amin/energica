@@ -64,6 +64,40 @@ const AllCategoriesPage = () => {
       fetchAllData();
    }, [supabase]);
 
+   useEffect(() => {
+      const handleHashChange = () => {
+         const hash = window.location.hash;
+         console.log("DEBUG: ~ handleHashChange ~ hash:", hash);
+         if (hash) {
+            const element = document.querySelector(hash);
+            if (element) {
+               const navbarHeight =
+                  document.querySelector("header")?.offsetHeight || 0;
+               const elementPosition =
+                  element.getBoundingClientRect().top + window.pageYOffset;
+               const offsetPosition = elementPosition - navbarHeight;
+
+               window.scrollTo({
+                  top: offsetPosition,
+                  behavior: "smooth",
+               });
+            }
+         }
+      };
+
+      // Scroll on initial load
+      setTimeout(() => {
+         handleHashChange();
+      }, 500);
+
+      // Scroll on hash change
+      window.addEventListener("hashchange", handleHashChange);
+
+      return () => {
+         window.removeEventListener("hashchange", handleHashChange);
+      };
+   }, [isLoading]);
+
    const handleWhatsAppClick = ({ product }: { product: Product | null }) => {
       const message = `Hello, I'm interested in the product: ${product?.title}`;
       const phoneNumber = "+2001066651786"; // Replace with your phone number
@@ -176,12 +210,16 @@ const AllCategoriesPage = () => {
 
          {/* Display Filtered Products */}
          {categoriesWithProductsAndModels.map(({ category, models }) => (
-            <div key={category.id} className="mb-10">
+            <div
+               key={category.id}
+               id={`category-${category.id}`}
+               className="mb-10"
+            >
                <h2 className="text-2xl font-bold text-gray-800 border-b-2 border-gray-300 pb-2 mb-6 uppercase">
                   {category.title}
                </h2>
                {models.map(({ model, products }) => (
-                  <div key={model.id} className="mb-8">
+                  <div key={model.id} className="mb-8" id={`model-${model.id}`}>
                      <h3 className="text-xl font-semibold text-gray-700 mb-4">
                         {model.title}
                      </h3>

@@ -10,14 +10,14 @@ interface ModelCardProps {
    className?: string;
 }
 
-const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
+const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
    return (
       <div className="model-card flex-shrink-0 transition-all duration-300 ease-in-out transform w-64 h-64 overflow-hidden border-2 border-blue-500 rounded-lg shadow-md hover:shadow-lg hover:shadow-blue-500/50 hover:-translate-y-1 bg-white grid grid-rows-[auto_auto_1fr] p-3">
          {/* Top: Title & Image */}
          <div className="flex items-center justify-between space-x-4">
             {/* Title (Vertically Centered) */}
             <div className="flex-1 flex flex-col justify-start p-2 space-y-1">
-               <Link href={`/category/${categorySlug}/${model.slug}`} passHref>
+               <Link href={`/category#model-${model.id}`} passHref>
                   <h3 className="text-xl font-semibold text-gray-900 cursor-pointer truncate hover:text-blue-600 transition-colors duration-200">
                      {model.title}
                   </h3>
@@ -31,7 +31,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
 
             {/* Image */}
             <div className="relative w-24 h-24 flex-shrink-0 ">
-               <Link href={`/model/${model.id}`} passHref>
+               <Link href={`/category#model-${model.id}`} passHref>
                   <Image
                      src={model.image}
                      alt={model.title}
@@ -59,7 +59,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model, categorySlug }) => {
 
          {/* Full-Width Description */}
          <div className="p-2">
-            <Link href={`/model/${model.id}`} passHref>
+            <Link href={`/category#model-${model.id}`} passHref>
                <p className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 line-clamp-3">
                   {model.description}
                </p>
