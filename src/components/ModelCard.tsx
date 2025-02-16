@@ -16,7 +16,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
    const remainingWords = words.join(" ");
 
    return (
-      <div className="group relative flex-shrink-0 w-72 h-auto min-h-[320px] bg-white rounded-2xl">
+      <div className="model-card group relative flex-shrink-0 w-72 h-auto min-h-[320px] bg-white rounded-2xl">
          {/* Background Effects - Moved to back */}
          <div
             className="absolute inset-0 rounded-2xl transition-all duration-300
