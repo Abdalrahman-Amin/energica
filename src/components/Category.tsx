@@ -66,7 +66,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    return (
       category && (
          <section
-            className="relative py-12 px-6 xl:px-80 lg:px-40 md:px-20 bg-white"
+            className="relative  xl:px-80 lg:px-40 md:px-20 bg-white"
             id={`category-${category.title}`}
          >
             {/* Decorative Background Elements */}
@@ -122,7 +122,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                   <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
                   {/* Product List */}
-                  <div className="py-6">
+                  <div className="">
                      <ModelList models={models} categorySlug={slug} />
                   </div>
 

@@ -30,7 +30,7 @@ export default function Home() {
    }
 
    return (
-      <main className="mt-[10.5rem] min-h-screen">
+      <main className="mt-52 min-h-screen">
          {categories.map((category) => (
             <Category
                key={category.id}
