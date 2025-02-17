@@ -33,3 +33,7 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
    background: #555;
 }
+
+.parent-container {
+   @apply flex flex-wrap gap-2 md:gap-4;
+ }

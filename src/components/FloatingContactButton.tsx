@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import {
-   // FaWhatsapp,
-   FaEnvelope,
+   FaWhatsapp,
+   // FaEnvelope,
    FaPhone,
    FaTimes,
    FaCommentDots,
@@ -55,7 +55,7 @@ const FloatingContactButton = () => {
             }`}
          >
             <div className="space-y-3">
-               <div className="flex items-center space-x-2">
+               {/* <div className="flex items-center space-x-2">
                   <FaEnvelope className="h-5 w-5 text-red-500" />
                   <a
                      href="mailto:abdelrhmanmohamed421@gmail.com"
@@ -63,14 +63,23 @@ const FloatingContactButton = () => {
                   >
                      Email
                   </a>
-               </div>
+               </div> */}
                <div className="flex items-center space-x-2">
                   <FaPhone className="h-5 w-5 text-blue-500" />
                   <a
                      href="tel:+2001070708070"
                      className="text-gray-700 hover:text-blue-600"
                   >
-                     Call
+                     01070708070
+                  </a>
+               </div>
+               <div className="flex items-center space-x-2">
+                  <FaWhatsapp className="h-5 w-5 text-green-500" />
+                  <a
+                     href="https://wa.me/+2001066651786"
+                     className="text-gray-700 hover:text-blue-600"
+                  >
+                     01066651786
                   </a>
                </div>
             </div>

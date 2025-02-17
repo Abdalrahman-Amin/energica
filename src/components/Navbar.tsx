@@ -7,10 +7,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // import { FaXmark, FaBars } from "react-icons/fa6";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import clsx from "clsx";
+// import clsx from "clsx";
 import useCategoryStore from "@/store/useCategoryStore";
 import FloatingContactButton from "./FloatingContactButton";
-import { FaWhatsapp } from "react-icons/fa";
+// import { FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
    const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
@@ -240,7 +240,7 @@ function Navbar() {
             {/* Contact Info (Visible on Mobile and Desktop) */}
             <div className="flex items-center gap-2">
                {/* WhatsApp Contact */}
-               <div className="flex items-center gap-1 md:gap-2 bg-blue-50 px-1 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
+               {/* <div className="flex items-center gap-1 md:gap-2 bg-blue-50 px-1 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
                   <FaWhatsapp className="h-3 w-3 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
                   <a
                      className="text-gray-700 font-medium text-[0.7rem] md:text-base hover:text-blue-600 transition-colors duration-200"
@@ -250,7 +250,7 @@ function Navbar() {
                   >
                      01066651786
                   </a>
-               </div>
+               </div> */}
 
                {/* Floating Contact Button */}
                <FloatingContactButton />
@@ -274,19 +274,42 @@ function Navbar() {
             </button> */}
 
             {/* Navigation Buttons - Always Visible & Compact */}
-            <div
-               className={clsx(
-                  "flex flex-wrap gap-1 md:gap-2 justify-center w-full"
-                  // pathname !== "/" && "hidden"
-               )}
-            >
+            {/* Parent container with grid layout */}
+            {/* Parent container with grid for mobile and flex for desktop */}
+            <div className="grid grid-cols-4 gap-1.5 w-full md:grid-cols-none md:flex md:flex-row">
                {categories.map((category) => (
                   <button
-                     key={category.id}
+                     key={category.title}
                      onClick={() => handleCategoryClick(category.title)}
-                     className={`whitespace-nowrap px-3 py-1 text-xs md:text-sm rounded-lg font-medium transition-all shadow-md bg-blue-50 text-blue-600 
-         ${activeSection === category.title ? "bg-blue-500 text-white" : ""}
-         flex-1 md:flex-none md:w-auto w-1/2`} // Adjust width for mobile and desktop
+                     className={`
+        /* Base Styles */
+        whitespace-nowrap
+        px-2
+        py-1
+        text-xs
+        rounded-md
+        font-medium
+        transition-all
+        duration-200
+        
+        /* Mobile Specific */
+        truncate
+        
+        /* Desktop Styles */
+        md:px-3
+        md:py-1.5
+        md:text-sm
+        md:rounded-lg
+        md:flex-1
+        
+        /* Colors and States */
+        ${
+           activeSection === category.title
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+        }
+      `}
+                     title={category.title}
                   >
                      {category.title}
                   </button>
