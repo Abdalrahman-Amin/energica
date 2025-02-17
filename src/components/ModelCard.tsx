@@ -44,11 +44,11 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
                         </span>
                      </h3>
                   </Link>
-                  {model.rating_value && (
+                  {/* {model.rating_value && (
                      <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
                         {model.rating_value} {model.rating_unit}
                      </div>
-                  )}
+                  )} */}
                </div>
 
                {/* Image Section */}

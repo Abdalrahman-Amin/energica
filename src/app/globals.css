@@ -36,4 +36,4 @@
 
 .parent-container {
    @apply flex flex-wrap gap-2 md:gap-4;
- }
+}
