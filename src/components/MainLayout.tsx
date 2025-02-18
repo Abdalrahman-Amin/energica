@@ -18,6 +18,11 @@ export default function MainLayout({
    const supabase = createClientComponentClient();
 
    useEffect(() => {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+   }, []);
+
+   useEffect(() => {
       fetchCategories();
    }, [fetchCategories]);
 

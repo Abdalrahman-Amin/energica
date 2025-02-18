@@ -12,6 +12,7 @@ export default function Home() {
 
    useEffect(() => {
       document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
    }, []);
 
    useEffect(() => {
