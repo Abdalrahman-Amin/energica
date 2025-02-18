@@ -11,6 +11,10 @@ export default function Home() {
    const supabase = createClientComponentClient();
 
    useEffect(() => {
+      document.documentElement.classList.remove("dark");
+   }, []);
+
+   useEffect(() => {
       const fetchCategories = async () => {
          setIsLoading(true);
          const { data, error } = await supabase.from("categories").select("*");
