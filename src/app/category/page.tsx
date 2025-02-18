@@ -11,9 +11,7 @@ const AllCategoriesPage = () => {
    const [products, setProducts] = useState<Product[]>([]);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
-   const [selectedCategory, setSelectedCategory] = useState<string | null>(
-      null
-   ); // For category filter
+   const [selectedCategory] = useState<string | null>(null); // For category filter
    const [selectedModel, setSelectedModel] = useState<string | null>(null); // For model filter
    const supabase = createClientComponentClient();
 
@@ -93,7 +91,7 @@ const AllCategoriesPage = () => {
       // Scroll on initial load
       setTimeout(() => {
          handleHashChange();
-      }, 500);
+      }, 1000);
 
       // Scroll on hash change
       window.addEventListener("hashchange", handleHashChange);
@@ -196,7 +194,7 @@ const AllCategoriesPage = () => {
             {/* Enhanced Filter Section */}
             <div className="relative mb-12">
                <div className="flex flex-col sm:flex-row gap-4 p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex-1">
+                  {/* <div className="flex-1">
                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Category
                      </label>
@@ -218,7 +216,7 @@ const AllCategoriesPage = () => {
                            </option>
                         ))}
                      </select>
-                  </div>
+                  </div> */}
 
                   <div className="flex-1">
                      <label className="block text-sm font-medium text-gray-700 mb-2">
