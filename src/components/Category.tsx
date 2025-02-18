@@ -66,7 +66,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
    return (
       category && (
          <section
-            className="relative  px-6 xl:px-80 lg:px-40 md:px-20 bg-white"
+            className="relative  px-3 xl:px-80 lg:px-40 md:px-20 bg-white"
             id={`category-${category.title}`}
          >
             {/* Decorative Background Elements */}
@@ -78,7 +78,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
             {/* Main Content Container */}
             <div className="relative max-w-[1920px] mx-auto">
                {/* Header: Category Title + Link */}
-               <div className="flex flex-wrap items-center justify-between mb-8">
+               <div className="flex flex-wrap items-center justify-between ">
                   {/* Category Title */}
                   <div
                      className="group cursor-pointer"
@@ -122,7 +122,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
                   <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
                   {/* Product List */}
-                  <div className="py-6">
+                  <div className="">
                      <ModelList models={models} categorySlug={slug} />
                   </div>
 

@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 // import clsx from "clsx";
 import useCategoryStore from "@/store/useCategoryStore";
 import FloatingContactButton from "./FloatingContactButton";
+import { ScrollableButton } from "./ScrollableButton";
 // import { FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
@@ -278,41 +279,12 @@ function Navbar() {
             {/* Parent container with grid for mobile and flex for desktop */}
             <div className="grid grid-cols-4 gap-1.5 w-full md:grid-cols-none md:flex md:flex-row">
                {categories.map((category) => (
-                  <button
+                  <ScrollableButton
                      key={category.title}
-                     onClick={() => handleCategoryClick(category.title)}
-                     className={`
-        /* Base Styles */
-        whitespace-nowrap
-        px-2
-        py-1
-        text-xs
-        rounded-md
-        font-medium
-        transition-all
-        duration-200
-        
-        /* Mobile Specific */
-        truncate
-        
-        /* Desktop Styles */
-        md:px-3
-        md:py-1.5
-        md:text-sm
-        md:rounded-lg
-        md:flex-1
-        
-        /* Colors and States */
-        ${
-           activeSection === category.title
-              ? "bg-blue-500 text-white hover:bg-blue-600"
-              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-        }
-      `}
                      title={category.title}
-                  >
-                     {category.title}
-                  </button>
+                     isActive={activeSection === category.title}
+                     onClick={() => handleCategoryClick(category.title)}
+                  />
                ))}
             </div>
          </div>

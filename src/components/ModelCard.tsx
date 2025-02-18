@@ -2,7 +2,7 @@ import { Model } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaFilePdf } from "react-icons/fa";
+// import { FaFilePdf } from "react-icons/fa";
 
 interface ModelCardProps {
    model: Model;
@@ -81,7 +81,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
             </div>
 
             {/* Data Sheet Button */}
-            <div className="mt-4 pt-4 border-t border-gray-100">
+            {/* <div className="mt-4 pt-4 border-t border-gray-100">
                <a
                   href={model.pdf_url}
                   download
@@ -98,7 +98,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ model }) => {
                   <FaFilePdf className="mr-2 text-white/90" />
                   Download Data Sheet
                </a>
-            </div>
+            </div> */}
          </div>
       </div>
    );
