@@ -20,6 +20,7 @@ const AllCategoriesPage = () => {
    useEffect(() => {
       const fetchAllData = async () => {
          try {
+            setIsLoading(true);
             // Fetch all categories
             const { data: categoriesData, error: categoriesError } =
                await supabase.from("categories").select("*");
