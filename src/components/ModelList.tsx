@@ -61,14 +61,10 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          {/* Container Background & Shadow */}
          <div className="absolute inset-x-0 h-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-50/50 via-blue-100/20 to-blue-50/50 blur-2xl -z-10" />
 
-         {/* Fade Edges */}
-         <div className="absolute left-8 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-         <div className="absolute right-8 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-
          {/* Scrollable Cards */}
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-8 py-8 px-2 hide-scrollbar scroll-smooth 
+            className="models flex overflow-x-auto gap-4 py-8 px-2 hide-scrollbar scroll-smooth 
                [scrollbar-width:none] [-ms-overflow-style:none] 
                [&::-webkit-scrollbar]:hidden"
             onScroll={checkOverflow}

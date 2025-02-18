@@ -33,4 +33,5 @@ export interface Product {
    slug: string;
    rating_value: number;
    rating_unit: string;
+   data_sheet?: string;
 }
