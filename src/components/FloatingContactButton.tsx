@@ -7,6 +7,7 @@ import {
    FaTimes,
    FaCommentDots,
 } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa6";
 
 const FloatingContactButton = () => {
    const [isOpen, setIsOpen] = useState(false);
@@ -55,15 +56,15 @@ const FloatingContactButton = () => {
             }`}
          >
             <div className="space-y-3">
-               {/* <div className="flex items-center space-x-2">
+               <div className="flex items-center space-x-2">
                   <FaEnvelope className="h-5 w-5 text-red-500" />
                   <a
-                     href="mailto:abdelrhmanmohamed421@gmail.com"
+                     href="mailto:Muhammadelshaer.energica@gmail.com"
                      className="text-gray-700 hover:text-blue-600"
                   >
                      Email
                   </a>
-               </div> */}
+               </div>
                <div className="flex items-center space-x-2">
                   <FaPhone className="h-5 w-5 text-blue-500" />
                   <a

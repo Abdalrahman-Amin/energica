@@ -34,11 +34,10 @@ function Navbar() {
    useEffect(() => {
       if (
          searchResults.categories.length > 0 ||
-         searchResults.models.length > 0
-         // ||
-         // searchResults.products.length > 0
+         searchResults.models.length > 0 ||
+         searchResults.products.length > 0
       ) {
-         if (searchQuery.length > 1) {
+         if (searchQuery.length > 0) {
             setIsSearchOpen(true);
          } else {
             setIsSearchOpen(false);
@@ -48,6 +47,7 @@ function Navbar() {
       searchResults.categories.length,
       searchResults.models.length,
       searchQuery,
+      searchResults.products.length,
    ]);
 
    const handleToggle = (categoryId: number) => {
@@ -55,16 +55,18 @@ function Navbar() {
    };
 
    const handleSearch = async (query: string) => {
-      if (query.length > 1) {
+      if (query.length > 0) {
          await fetchSearchResults(query);
       }
    };
 
-   const handleSearchResultClick = (query: string, type: string) => {
+   const handleSearchResultClick = (id: number, type: string) => {
       if (type === "category") {
-         router.push(`/category/${query}`);
+         router.push(`/category#category-${id}`);
       } else if (type === "model") {
-         router.push(`/model/${query}`);
+         router.push(`/category#model-${id}`);
+      } else if (type === "product") {
+         router.push(`/category#product-${id}`);
       }
       setIsSearchOpen(false);
       setSearchQuery("");
@@ -205,16 +207,13 @@ function Navbar() {
                   className="py-1 md:py-2 pl-8 md:pl-10 pr-4 w-full rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm md:text-base"
                />
                {isSearchOpen ? (
-                  <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10">
+                  <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto">
                      {searchResults.categories.map((category) => (
                         <div
                            key={category.id}
                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                            onClick={() =>
-                              handleSearchResultClick(
-                                 category.title,
-                                 "category"
-                              )
+                              handleSearchResultClick(category.id, "category")
                            }
                         >
                            {category.title}
@@ -225,13 +224,21 @@ function Navbar() {
                            key={model.id}
                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                            onClick={() =>
-                              handleSearchResultClick(
-                                 model.id.toString(),
-                                 "model"
-                              )
+                              handleSearchResultClick(model.id, "model")
                            }
                         >
                            {model.title}
+                        </div>
+                     ))}
+                     {searchResults.products.map((product) => (
+                        <div
+                           key={product.id}
+                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                           onClick={() =>
+                              handleSearchResultClick(product.id, "product")
+                           }
+                        >
+                           {`${product.title} ${product.rating_value} ${product.rating_unit}`}
                         </div>
                      ))}
                   </div>

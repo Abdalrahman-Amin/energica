@@ -67,7 +67,6 @@ const AllCategoriesPage = () => {
    useEffect(() => {
       const handleHashChange = () => {
          const hash = window.location.hash;
-         console.log("DEBUG: ~ handleHashChange ~ hash:", hash);
          if (hash) {
             const element = document.querySelector(hash);
             if (element) {
@@ -75,7 +74,12 @@ const AllCategoriesPage = () => {
                   document.querySelector("header")?.offsetHeight || 0;
                const elementPosition =
                   element.getBoundingClientRect().top + window.pageYOffset;
-               const offsetPosition = elementPosition - navbarHeight;
+               let offsetPosition;
+               if (hash.startsWith("#category")) {
+                  offsetPosition = elementPosition - navbarHeight;
+               } else {
+                  offsetPosition = elementPosition - navbarHeight - 200;
+               }
 
                window.scrollTo({
                   top: offsetPosition,
@@ -336,6 +340,7 @@ const AllCategoriesPage = () => {
                            <div className="scroll-container flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 hide-scrollbar::-webkit-scrollbar hide-scrollbar">
                               {products.map((product) => (
                                  <div
+                                    id={`product-${product.id}`}
                                     key={product.id}
                                     className="group flex-shrink-0 w-[280px] bg-white rounded-xl overflow-hidden transition-all duration-300
               hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]

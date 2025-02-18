@@ -9,7 +9,7 @@ interface CategoryState {
    searchResults: {
       categories: Category[];
       models: Model[];
-      // products: Product[];
+      products: Product[];
    };
    isLoading: boolean;
    error: string | null;
@@ -70,32 +70,58 @@ const useCategoryStore = create<CategoryState>((set) => ({
          });
       }
    },
+
    fetchSearchResults: async (query: string) => {
       const supabase = createClientComponentClient();
       set({ isLoading: true, error: null });
+
       try {
+         // Split the query into individual words (to match separately)
+         const queryParts = query.split(" ");
+
+         // Build OR conditions dynamically for each word
+         const titleConditions = queryParts
+            .map((part) => `title.ilike.%${part}%`)
+            .join(",");
+         const unitConditions = queryParts
+            .map((part) => `rating_unit.ilike.%${part}%`)
+            .join(",");
+
+         // Extract numeric part separately for `rating_value`
+         const numericQuery = queryParts.find((part) => !isNaN(Number(part)));
+
+         let productsQuery = supabase
+            .from("products")
+            .select("*")
+            .or(`${titleConditions},${unitConditions}`);
+
+         // If a numeric value is found, add an explicit filter for rating_value
+         if (numericQuery) {
+            productsQuery = productsQuery.or(`rating_value.eq.${numericQuery}`);
+         }
+
          const [
             { data: categoriesData, error: categoriesError },
             { data: modelsData, error: modelsError },
-            // { data: productsData, error: productsError },
+            { data: productsData, error: productsError },
          ] = await Promise.all([
             supabase
                .from("categories")
                .select("*")
                .ilike("title", `%${query}%`),
             supabase.from("models").select("*").ilike("title", `%${query}%`),
-            supabase.from("products").select("*").ilike("title", `%${query}%`),
+            productsQuery,
          ]);
 
          if (categoriesError) throw categoriesError;
          if (modelsError) throw modelsError;
-         // if (productsError) throw productsError;
+         if (productsError) throw productsError;
 
          set({
             searchResults: {
                categories: categoriesData,
                models: modelsData,
-               // products: productsData,
+               products: productsData,
             },
             isLoading: false,
          });
@@ -107,6 +133,44 @@ const useCategoryStore = create<CategoryState>((set) => ({
          });
       }
    },
+
+   // fetchSearchResults: async (query: string) => {
+   //    const supabase = createClientComponentClient();
+   //    set({ isLoading: true, error: null });
+   //    try {
+   //       const [
+   //          { data: categoriesData, error: categoriesError },
+   //          { data: modelsData, error: modelsError },
+   //          { data: productsData, error: productsError },
+   //       ] = await Promise.all([
+   //          supabase
+   //             .from("categories")
+   //             .select("*")
+   //             .ilike("title", `%${query}%`),
+   //          supabase.from("models").select("*").ilike("title", `%${query}%`),
+   //          supabase.from("products").select("*").ilike("title", `%${query}%`),
+   //       ]);
+
+   //       if (categoriesError) throw categoriesError;
+   //       if (modelsError) throw modelsError;
+   //       if (productsError) throw productsError;
+
+   //       set({
+   //          searchResults: {
+   //             categories: categoriesData,
+   //             models: modelsData,
+   //             products: productsData,
+   //          },
+   //          isLoading: false,
+   //       });
+   //    } catch (error) {
+   //       console.error("Error fetching search results:", error);
+   //       set({
+   //          error: "Failed to fetch search results. Please try again later.",
+   //          isLoading: false,
+   //       });
+   //    }
+   // },
    deleteCategory: async (id: number) => {
       const supabase = createClientComponentClient();
       try {

@@ -1,6 +1,7 @@
 "use client";
 import useCategoryStore from "@/store/useCategoryStore";
 import { usePathname } from "next/navigation";
+// import { FaPhone } from "react-icons/fa6";
 // import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
@@ -29,7 +30,7 @@ const Footer = () => {
                      {categories.map((category) => (
                         <li key={category.id}>
                            <a
-                              href={`/category/${category.slug}`}
+                              href={`/category#category-${category.id}`}
                               className="text-gray-400 hover:text-white transition-colors"
                            >
                               {category.title}
@@ -46,7 +47,18 @@ const Footer = () => {
                      <li className="text-gray-400">
                         Email: Muhammadelshaer.energica@gmail.com
                      </li>
-                     <li className="text-gray-400">Phone: +20 107 070 8070</li>
+                     <li className="text-gray-400">
+                        <div className="flex items-center space-x-2">
+                           <a href="tel:+2001070708070">
+                              Phone: +20 107 070 8070
+                           </a>
+                        </div>
+                     </li>
+                     <li className="text-gray-400">
+                        <a href="https://wa.me/+2001066651786">
+                           Whatsapp: 01066651786
+                        </a>
+                     </li>
                      <li className="text-gray-400">
                         Address: 33 Youssef El seddik St, Behind Elgharbiyya
                         Governate
