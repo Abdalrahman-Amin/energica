@@ -57,74 +57,72 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
    };
 
    return (
-      <div className="relative px-4">
-         {/* Container Background & Shadow */}
-         <div className="absolute inset-x-0 h-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-50/50 via-blue-100/20 to-blue-50/50 blur-2xl -z-10" />
+<div className={`relative px-4`}>
+   {/* Container Background & Shadow */}
+   <div className="absolute inset-x-0 h-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-50/50 via-blue-100/20 to-blue-50/50 blur-2xl -z-10" />
 
-         {/* Scrollable Cards */}
-         <div
-            ref={containerRef}
-            className="models flex overflow-x-auto gap-4 py-8 px-2 hide-scrollbar scroll-smooth 
-               [scrollbar-width:none] [-ms-overflow-style:none] 
-               [&::-webkit-scrollbar]:hidden"
-            onScroll={checkOverflow}
-         >
-            {models.map((model) => (
-               <div key={model.id} className="first:ml-0 last:mr-0">
-                  <ModelCard model={model} categorySlug={categorySlug} />
-               </div>
-            ))}
+   {/* Scrollable Cards */}
+   <div
+      ref={containerRef}
+      className="models flex overflow-x-auto gap-4 py-8 px-2 hide-scrollbar scroll-smooth 
+         [scrollbar-width:none] [-ms-overflow-style:none] 
+         [&::-webkit-scrollbar]:hidden"
+      onScroll={checkOverflow}
+   >
+      {models.map((model) => (
+         <div key={model.id} className="first:ml-0 last:mr-0">
+            <ModelCard model={model} categorySlug={categorySlug} />
          </div>
+      ))}
+   </div>
 
-         {/* Scroll Buttons - Enhanced */}
-         {canScrollLeft && (
-            <button
-               onClick={scrollLeft}
-               className="absolute -left-4 top-1/2 -translate-y-1/2 
-                 w-14 h-14 rounded-full 
-                 bg-white/80 backdrop-blur-sm 
-                 text-blue-600 
-                 flex items-center justify-center 
-                 shadow-lg shadow-black/5 
-                 ring-1 ring-black/5
-                 transition-all duration-300 
-                 hover:scale-105 hover:bg-white 
-                 hover:text-blue-700 hover:shadow-xl
-                 active:scale-95
-                 focus:outline-none focus:ring-2 
-                 focus:ring-blue-500 focus:ring-offset-2
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 disabled:hover:scale-100"
-               aria-label="Scroll left"
-            >
-               <FaArrowLeft className="w-6 h-6 transform transition-transform group-hover:translate-x-0.5" />
-            </button>
-         )}
+   {/* Scroll Buttons - Smaller & Better Positioned */}
+   {canScrollLeft && (
+      <button
+         onClick={scrollLeft}
+         className="absolute -left-2 top-1/2 -translate-y-1/2 
+           w-10 h-10 rounded-full 
+           bg-white/90 backdrop-blur-sm 
+           text-blue-600 
+           flex items-center justify-center 
+           shadow-md shadow-black/5 
+           ring-1 ring-black/5
+           transition-all duration-200 
+           hover:bg-white hover:text-blue-700
+           active:scale-95
+           focus:outline-none focus:ring-2 
+           focus:ring-blue-500 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed
+           z-10"
+         aria-label="Scroll left"
+      >
+         <FaArrowLeft className="w-4 h-4" />
+      </button>
+   )}
 
-         {canScrollRight && (
-            <button
-               onClick={scrollRight}
-               className="absolute -right-4 top-1/2 -translate-y-1/2 
-                 w-14 h-14 rounded-full 
-                 bg-white/80 backdrop-blur-sm 
-                 text-blue-600 
-                 flex items-center justify-center 
-                 shadow-lg shadow-black/5 
-                 ring-1 ring-black/5
-                 transition-all duration-300 
-                 hover:scale-105 hover:bg-white 
-                 hover:text-blue-700 hover:shadow-xl
-                 active:scale-95
-                 focus:outline-none focus:ring-2 
-                 focus:ring-blue-500 focus:ring-offset-2
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 disabled:hover:scale-100"
-               aria-label="Scroll right"
-            >
-               <FaArrowRight className="w-6 h-6 transform transition-transform group-hover:-translate-x-0.5" />
-            </button>
-         )}
-      </div>
+   {canScrollRight && (
+      <button
+         onClick={scrollRight}
+         className="absolute -right-2 top-1/2 -translate-y-1/2 
+           w-10 h-10 rounded-full 
+           bg-white/90 backdrop-blur-sm 
+           text-blue-600 
+           flex items-center justify-center 
+           shadow-md shadow-black/5 
+           ring-1 ring-black/5
+           transition-all duration-200 
+           hover:bg-white hover:text-blue-700
+           active:scale-95
+           focus:outline-none focus:ring-2 
+           focus:ring-blue-500 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed
+           z-10"
+         aria-label="Scroll right"
+      >
+         <FaArrowRight className="w-4 h-4" />
+      </button>
+   )}
+</div>
    );
 };
 
