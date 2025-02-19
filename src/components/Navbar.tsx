@@ -128,10 +128,11 @@ function Navbar() {
       }
       const section = document.getElementById(`category-${categoryId}`);
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
+      console.log("DEBUG: ~ handleCategoryClick ~ navbarHeight:", navbarHeight)
 
       if (section) {
          window.scrollTo({
-            top: section.offsetTop - navbarHeight,
+            top: section.offsetTop - navbarHeight - 44,
             behavior: "smooth",
          });
          // setActiveSection(categoryId);
