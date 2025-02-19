@@ -14,7 +14,7 @@ import { ScrollableButton } from "./ScrollableButton";
 // import { FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
-   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+   // const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
    const [activeSection, setActiveSection] = useState<string | null>(null);
    const [searchQuery, setSearchQuery] = useState("");
    const pathname = usePathname();
@@ -23,10 +23,10 @@ function Navbar() {
       fetchModelsForCategory,
       fetchSearchResults,
       searchResults,
-      models,
+      // models,
    } = useCategoryStore();
    const router = useRouter();
-   const [openCategory, setOpenCategory] = useState<number | null>(null);
+   // const [openCategory, setOpenCategory] = useState<number | null>(null);
    const buttonRef = useRef<HTMLDivElement>(null);
    const searchRef = useRef<HTMLDivElement>(null);
    const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -50,9 +50,15 @@ function Navbar() {
       searchResults.products.length,
    ]);
 
-   const handleToggle = (categoryId: number) => {
-      setOpenCategory(openCategory === categoryId ? null : categoryId);
-   };
+   // const handleToggle = (categoryId: number) => {
+   //    setOpenCategory(
+   //       String(openCategory) === String(categoryId) ? null : String(categoryId)
+   //    );
+   // };
+
+   useEffect(() => {
+      console.log("DEBUG-----------------------", activeSection);
+   }, [activeSection]);
 
    const handleSearch = async (query: string) => {
       if (query.length > 0) {
@@ -77,8 +83,8 @@ function Navbar() {
          buttonRef.current &&
          !buttonRef.current.contains(event.target as Node)
       ) {
-         setIsNavMenuOpen(false);
-         setOpenCategory(null);
+         // setIsNavMenuOpen(false);
+         // setOpenCategory(null);
       }
    };
    const handleClickOutsideSearch = (event: MouseEvent) => {
@@ -110,53 +116,39 @@ function Navbar() {
    // Removed unused handleSearchResultClick function
 
    // Scroll to category section
-   const handleCategoryClick = (categoryId: string) => {
-      if (pathname !== "/") {
-         setActiveSection(categoryId);
-         router.push(`/`);
-         setTimeout(() => {
-            const section = document.getElementById(`category-${categoryId}`);
-            const navbarHeight =
-               document.querySelector("header")?.offsetHeight || 0;
-            if (section) {
-               window.scrollTo({
-                  top: section.offsetTop - navbarHeight,
-                  behavior: "smooth",
-               });
-            }
-         }, 500);
-      }
+   const handleCategoryClick = (categoryId: number) => {
+      console.log("DEBUG: ~ handleCategoryClick ~ categoryId:", categoryId);
       const section = document.getElementById(`category-${categoryId}`);
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
-      console.log("DEBUG: ~ handleCategoryClick ~ navbarHeight:", navbarHeight)
+      console.log("DEBUG: ~ handleCategoryClick ~ navbarHeight:", navbarHeight);
 
       if (section) {
          window.scrollTo({
             top: section.offsetTop - navbarHeight - 44,
             behavior: "smooth",
          });
-         // setActiveSection(categoryId);
+         setActiveSection(String(categoryId));
       }
 
-      setIsNavMenuOpen(false); // Close menu on mobile after click
-      setOpenCategory(null);
+      // setIsNavMenuOpen(false); // Close menu on mobile after click
+      // setOpenCategory(null);
    };
 
    const handleScroll = useCallback(() => {
-      let currentSection: string | null = null;
+      let currentSection: number | null = null;
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
 
       categories.forEach((category) => {
-         const section = document.getElementById(`category-${category.title}`);
+         const section = document.getElementById(`category-${category.id}`);
          if (section) {
             const rect = section.getBoundingClientRect();
             if (rect.top <= navbarHeight + 100 && rect.bottom >= navbarHeight) {
-               currentSection = category.title;
+               currentSection = category.id;
             }
          }
       });
 
-      setActiveSection(currentSection);
+      setActiveSection(String(currentSection));
    }, [categories]);
 
    useEffect(() => {
@@ -171,7 +163,7 @@ function Navbar() {
          fetchModelsForCategory(category.id);
       });
       if (categories.length > 0) {
-         setActiveSection(categories[0].title);
+         setActiveSection(String(categories[0].id));
       }
    }, [categories, fetchModelsForCategory]);
    if (pathname.includes("/admin")) return null;
@@ -290,64 +282,14 @@ function Navbar() {
                   <ScrollableButton
                      key={category.title}
                      title={category.title}
-                     isActive={activeSection === category.title}
-                     onClick={() => handleCategoryClick(category.title)}
+                     isActive={String(activeSection) === String(category.id)}
+                     onClick={() => handleCategoryClick(category.id)}
                   />
                ))}
             </div>
          </div>
 
          {/* Mobile Menu (Dropdown) */}
-         {isNavMenuOpen && (
-            <div
-               className="absolute top-full left-0 w-full bg-white shadow-xl md:hidden z-50"
-               ref={buttonRef}
-            >
-               <nav className="flex flex-col items-center gap-3 py-4">
-                  {categories.map((category) => (
-                     <div
-                        key={category.id}
-                        className="w-full px-4 border-b border-gray-100 last:border-b-0"
-                     >
-                        {/* Clickable Category Header */}
-                        <button
-                           onClick={() => handleToggle(category.id)}
-                           className="w-full text-left text-xl font-semibold text-gray-800 flex justify-between items-center py-3 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out"
-                        >
-                           <span>{category.title}</span>
-                           <span className="text-gray-500 transform transition-transform duration-200">
-                              {openCategory === category.id ? "▲" : "▼"}
-                           </span>
-                        </button>
-
-                        {/* Show models if the category is open */}
-                        {openCategory === category.id && (
-                           <ul className="mt-2 pl-6 text-gray-600 space-y-2">
-                              {models[category.id]?.map((model) => (
-                                 <Link
-                                    key={model.id}
-                                    href={`/model/${model.id}`}
-                                    passHref
-                                    onClick={() => {
-                                       setIsNavMenuOpen(false);
-                                       setOpenCategory(null);
-                                    }}
-                                 >
-                                    <li
-                                       key={model.id}
-                                       className="text-base hover:text-blue-600 hover:bg-gray-50 px-3 py-1.5 rounded-md transition-all duration-200 ease-in-out"
-                                    >
-                                       {model.title}
-                                    </li>
-                                 </Link>
-                              ))}
-                           </ul>
-                        )}
-                     </div>
-                  ))}
-               </nav>
-            </div>
-         )}
       </header>
    );
 }

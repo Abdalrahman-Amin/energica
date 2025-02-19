@@ -194,30 +194,6 @@ const AllCategoriesPage = () => {
             {/* Enhanced Filter Section */}
             <div className="relative mb-12">
                <div className="flex flex-col sm:flex-row gap-4 p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
-                  {/* <div className="flex-1">
-                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Category
-                     </label>
-                     <select
-                        value={selectedCategory || ""}
-                        onChange={(e) =>
-                           setSelectedCategory(e.target.value || null)
-                        }
-                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl
-                     text-gray-700 text-sm
-                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                     hover:border-gray-300 transition-colors duration-200
-                     appearance-none cursor-pointer"
-                     >
-                        <option value="">All Categories</option>
-                        {categories.map((category) => (
-                           <option key={category.id} value={category.id}>
-                              {category.title}
-                           </option>
-                        ))}
-                     </select>
-                  </div> */}
-
                   <div className="flex-1">
                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Model

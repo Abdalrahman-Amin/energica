@@ -67,7 +67,7 @@ const Category: React.FC<CategoryProps> = ({ category, slug }) => {
       category && (
          <section
             className="relative  px-3 xl:px-80 lg:px-40 md:px-20 bg-white"
-            id={`category-${category.title}`}
+            id={`category-${category.id}`}
          >
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
