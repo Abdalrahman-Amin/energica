@@ -1,120 +1,190 @@
 "use client";
+
+import { motion } from "framer-motion";
 import useCategoryStore from "@/store/useCategoryStore";
 import { usePathname } from "next/navigation";
-// import { FaPhone } from "react-icons/fa6";
-// import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
    const { categories } = useCategoryStore();
    const pathName = usePathname();
+
    if (pathName.includes("admin")) return null;
+
+   const containerVariants = {
+      hidden: { opacity: 0, y: 20 },
+      visible: {
+         opacity: 1,
+         y: 0,
+         transition: {
+            duration: 0.6,
+            staggerChildren: 0.1,
+         },
+      },
+   };
+
+   const itemVariants = {
+      hidden: { opacity: 0, y: 10 },
+      visible: {
+         opacity: 1,
+         y: 0,
+         transition: { duration: 0.4 },
+      },
+   };
+
+   type IconProps = {
+      className?: string;
+      // Add other props that your icons might accept
+   };
+
+   const ContactItem = ({
+      icon: Icon,
+      href,
+      children,
+   }: {
+      icon: React.ComponentType<React.PropsWithChildren<IconProps>>;
+      href: string;
+      children: React.ReactNode;
+   }) => (
+      <motion.li
+         // variants={itemVariants}
+         className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+      >
+         <Icon className="h-4 w-4" />
+         {href ? (
+            <a href={href} className="hover:underline">
+               {children}
+            </a>
+         ) : (
+            <span>{children}</span>
+         )}
+      </motion.li>
+   );
+
    return (
-      <footer className="bg-gray-900 text-white py-12  w-full">
+      <motion.footer
+         initial="hidden"
+         whileInView="visible"
+         viewport={{ once: true }}
+         variants={containerVariants}
+         className="bg-gray-900 text-white py-12 w-full"
+      >
          <div className="container mx-auto px-4">
-            {/* Footer Content */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <motion.div
+               variants={containerVariants}
+               className="grid grid-cols-1 md:grid-cols-4 gap-8"
+            >
                {/* About Section */}
-               <div className="space-y-4">
-                  <h3 className="text-xl font-bold">About Us</h3>
-                  <p className="text-gray-400">
+               <motion.div variants={itemVariants} className="space-y-4">
+                  <motion.h3
+                     variants={itemVariants}
+                     className="text-xl font-bold relative inline-block"
+                  >
+                     About Us
+                     <motion.div
+                        className="absolute -bottom-1 left-0 h-0.5 bg-purple-500"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                     />
+                  </motion.h3>
+                  <motion.p variants={itemVariants} className="text-gray-400">
                      We are dedicated to providing the best solutions for your
                      energy needs. Our products are designed to be reliable,
                      efficient, and sustainable.
-                  </p>
-               </div>
+                  </motion.p>
+               </motion.div>
 
                {/* Quick Links Section */}
-               <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Quick Links</h3>
-                  <ul className="space-y-2">
+               <motion.div variants={itemVariants} className="space-y-4">
+                  <motion.h3
+                     variants={itemVariants}
+                     className="text-xl font-bold relative inline-block"
+                  >
+                     Quick Links
+                     <motion.div
+                        className="absolute -bottom-1 left-0 h-0.5 bg-purple-500"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                     />
+                  </motion.h3>
+                  <motion.ul
+                     //  variants={containerVariants}
+                     className="space-y-2"
+                  >
                      {categories.map((category) => (
-                        <li key={category.id}>
-                           <a
-                              href={`/category#category-${category.id}`}
-                              className="text-gray-400 hover:text-white transition-colors"
+                        <motion.li
+                           key={category.id}
+                           // variants={itemVariants}
+                           whileHover={{ x: 5 }}
+                        >
+                           <Button
+                              variant="link"
+                              asChild
+                              className="text-gray-400 hover:text-white p-0 h-auto font-normal"
                            >
-                              {category.title}
-                           </a>
-                        </li>
+                              <a href={`/category#category-${category.id}`}>
+                                 {category.title}
+                              </a>
+                           </Button>
+                        </motion.li>
                      ))}
-                  </ul>
-               </div>
+                  </motion.ul>
+               </motion.div>
 
                {/* Contact Section */}
-               <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Contact Us</h3>
-                  <ul className="space-y-2">
-                     <li className="text-gray-400">
-                        Email: Muhammadelshaer.energica@gmail.com
-                     </li>
-                     <li className="text-gray-400">
-                        <div className="flex items-center space-x-2">
-                           <a href="tel:+2001070708070">
-                              Phone: +20 107 070 8070
-                           </a>
-                        </div>
-                     </li>
-                     <li className="text-gray-400">
-                        <a href="https://wa.me/+2001066651786">
-                           Whatsapp: 01066651786
-                        </a>
-                     </li>
-                     <li className="text-gray-400">
-                        Address: 33 Youssef El seddik St, Behind Elgharbiyya
-                        Governate
-                     </li>
-                  </ul>
-               </div>
+               <motion.div
+                  variants={itemVariants}
+                  className="space-y-4 md:col-span-2"
+               >
+                  <motion.h3
+                     variants={itemVariants}
+                     className="text-xl font-bold relative inline-block"
+                  >
+                     Contact Us
+                     <motion.div
+                        className="absolute -bottom-1 left-0 h-0.5 bg-purple-500"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                     />
+                  </motion.h3>
+                  <motion.ul variants={containerVariants} className="space-y-3">
+                     <ContactItem
+                        icon={Mail}
+                        href="mailto:Muhammadelshaer.energica@gmail.com"
+                     >
+                        Muhammadelshaer.energica@gmail.com
+                     </ContactItem>
+                     <ContactItem icon={Phone} href="tel:+2001070708070">
+                        +20 107 070 8070
+                     </ContactItem>
+                     <ContactItem
+                        icon={MessageCircle}
+                        href="https://wa.me/+2001066651786"
+                     >
+                        Whatsapp: 01066651786
+                     </ContactItem>
+                     <ContactItem icon={MapPin} href="#">
+                        33 Youssef El seddik St, Behind Elgharbiyya Governate
+                     </ContactItem>
+                  </motion.ul>
+               </motion.div>
+            </motion.div>
 
-               {/* Social Media Section */}
-               {/* <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Follow Us</h3>
-                  <div className="flex space-x-4">
-                     <a
-                        href="https://facebook.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                     >
-                        <FaFacebook size={24} />
-                     </a>
-                     <a
-                        href="https://twitter.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                     >
-                        <FaTwitter size={24} />
-                     </a>
-                     <a
-                        href="https://instagram.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                     >
-                        <FaInstagram size={24} />
-                     </a>
-                     <a
-                        href="https://linkedin.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                     >
-                        <FaLinkedin size={24} />
-                     </a>
-                  </div>
-               </div> */}
-            </div>
+            <Separator className="my-8 bg-gray-800" />
 
-            {/* Copyright Section */}
-            <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <motion.div variants={itemVariants} className="text-center">
                <p className="text-gray-400">
                   &copy; {new Date().getFullYear()} Energica. All rights
                   reserved.
                </p>
-            </div>
+            </motion.div>
          </div>
-      </footer>
+      </motion.footer>
    );
 };
 

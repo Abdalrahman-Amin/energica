@@ -2,7 +2,16 @@
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Product, Model, Category } from "@/types/types";
-import Loader from "@/components/ui/Loader";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ModelSection } from "@/components/ModelSection";
 
 const AllCategoriesPage = () => {
@@ -156,101 +165,161 @@ const AllCategoriesPage = () => {
    }, {} as Record<number, string>);
 
    if (isLoading) {
-      return <Loader size="lg" />;
+      return (
+         <div className="container mx-auto px-4 py-16 mt-32">
+            <div className="space-y-8">
+               <Skeleton className="h-12 w-3/4 mx-auto" />
+               <Skeleton className="h-8 w-1/2 mx-auto" />
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[1, 2, 3].map((i) => (
+                     <Skeleton key={i} className="h-64" />
+                  ))}
+               </div>
+            </div>
+         </div>
+      );
    }
 
    if (error) {
       return (
-         <div className="flex justify-center items-center h-screen">
+         <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-center items-center h-screen"
+         >
             <p className="text-red-500 text-lg">{error}</p>
-         </div>
+         </motion.div>
       );
    }
 
    if (!categories.length) {
       return (
-         <div className="flex justify-center items-center h-screen">
+         <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-center items-center h-screen"
+         >
             <p className="text-gray-600 text-lg">No categories found.</p>
-         </div>
+         </motion.div>
       );
    }
 
    return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <motion.div
+         initial={{ opacity: 0 }}
+         animate={{ opacity: 1 }}
+         className="min-h-screen bg-gradient-to-b from-white to-gray-50"
+      >
          <div className="container mx-auto px-4 py-16 mt-32">
             {/* Hero Section */}
-            <div className="relative mb-16 text-center">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="relative mb-16 text-center"
+            >
                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
                   Explore{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-700">
                      All Categories
                   </span>
                </h1>
-               <div className="absolute inset-x-0 top-1/2 -z-10 transform -translate-y-1/2">
-                  <div className="h-[200px] bg-gradient-to-r from-blue-50 via-blue-100/20 to-blue-50 blur-3xl opacity-50" />
-               </div>
-            </div>
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  className="absolute inset-x-0 top-1/2 -z-10 transform -translate-y-1/2"
+               >
+                  <div className="h-[200px] bg-gradient-to-r from-blue-50 via-blue-100/20 to-blue-50 blur-3xl" />
+               </motion.div>
+            </motion.div>
 
-            {/* Enhanced Filter Section */}
-            <div className="relative mb-12">
-               <div className="flex flex-col sm:flex-row gap-4 p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex-1">
-                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Model
-                     </label>
-                     <select
-                        value={selectedModel || ""}
-                        onChange={(e) =>
-                           setSelectedModel(e.target.value || null)
-                        }
-                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl
-                     text-gray-700 text-sm
-                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                     hover:border-gray-300 transition-colors duration-200
-                     appearance-none cursor-pointer"
-                     >
-                        <option value="">All Models</option>
-                        {models.map((model) => (
-                           <option key={model.id} value={model.id}>
-                              {model.title} (
-                              {modelCategoryMap[model.id] || "Unknown Category"}
-                              )
-                           </option>
-                        ))}
-                     </select>
-                  </div>
-               </div>
-            </div>
+            {/* Filter Section */}
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+               className="mb-12"
+            >
+               <Card>
+                  <CardContent className="p-6">
+                     <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1">
+                           <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Model
+                           </label>
+                           <Select
+                              value={selectedModel || ""}
+                              onValueChange={(value) =>
+                                 setSelectedModel(value || null)
+                              }
+                           >
+                              <SelectTrigger>
+                                 <SelectValue placeholder="All Models" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                 <SelectItem value="all">All Models</SelectItem>
+                                 {models.map((model) => (
+                                    <SelectItem
+                                       key={model.id}
+                                       value={String(model.id)}
+                                    >
+                                       {model.title} (
+                                       {modelCategoryMap[model.id] ||
+                                          "Unknown Category"}
+                                       )
+                                    </SelectItem>
+                                 ))}
+                              </SelectContent>
+                           </Select>
+                        </div>
+                     </div>
+                  </CardContent>
+               </Card>
+            </motion.div>
 
             {/* Categories and Products */}
-            {categoriesWithProductsAndModels.map(({ category, models }) => (
-               <div
-                  key={category.id}
-                  id={`category-${category.id}`}
-                  className="mb-16"
-               >
-                  {/* Category Header */}
-                  <div className="relative mb-8">
-                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800 inline-block">
-                        {category.title}
-                     </h2>
-                     <div className="mt-2 h-1 w-20 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full" />
-                  </div>
+            <AnimatePresence mode="wait">
+               {categoriesWithProductsAndModels.map(
+                  ({ category, models }, index) => (
+                     <motion.div
+                        key={category.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        id={`category-${category.id}`}
+                        className="mb-16"
+                     >
+                        {/* Category Header */}
+                        <motion.div
+                           initial={{ opacity: 0, x: -20 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           className="relative mb-8"
+                        >
+                           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 inline-block">
+                              {category.title}
+                           </h2>
+                           <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: "5rem" }}
+                              transition={{ delay: 0.3 }}
+                              className="mt-2 h-1 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full"
+                           />
+                        </motion.div>
 
-                  {/* Models and Products */}
-                  {models.map(({ model, products }) => (
-                     <ModelSection
-                        key={model.id}
-                        model={model}
-                        products={products}
-                        handleWhatsAppClick={handleWhatsAppClick}
-                     />
-                  ))}
-               </div>
-            ))}
+                        {/* Models and Products */}
+                        {models.map(({ model, products }) => (
+                           <ModelSection
+                              key={model.id}
+                              model={model}
+                              products={products}
+                              handleWhatsAppClick={handleWhatsAppClick}
+                           />
+                        ))}
+                     </motion.div>
+                  )
+               )}
+            </AnimatePresence>
          </div>
-      </div>
+      </motion.div>
    );
 };
-
 export default AllCategoriesPage;
