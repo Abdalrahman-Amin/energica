@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Product, Model } from "@/types/types";
 import Image from "next/image";
-import Loader from "@/components/Loader";
+import Loader from "@/components/ui/Loader";
 
 const CategoryProductsPage = () => {
    const { categorySlug } = useParams();
