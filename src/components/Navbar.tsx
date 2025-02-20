@@ -239,6 +239,37 @@ function Navbar() {
                               </motion.div>
                            ))}
                            {/* Similar mapping for models and products */}
+                           {searchResults.models.map((model) => (
+                              <motion.div
+                                 key={model.id}
+                                 whileHover={{
+                                    backgroundColor: "rgb(243 244 246)",
+                                 }}
+                                 className="px-4 py-2 cursor-pointer"
+                                 onClick={() =>
+                                    handleSearchResultClick(model.id, "model")
+                                 }
+                              >
+                                 {model.title}
+                              </motion.div>
+                           ))}
+                           {searchResults.products.map((product) => (
+                              <motion.div
+                                 key={product.id}
+                                 whileHover={{
+                                    backgroundColor: "rgb(243 244 246)",
+                                 }}
+                                 className="px-4 py-2 cursor-pointer"
+                                 onClick={() =>
+                                    handleSearchResultClick(
+                                       product.id,
+                                       "product"
+                                    )
+                                 }
+                              >
+                                 {`${product.title} ${product.rating_value} ${product.rating_unit}`}
+                              </motion.div>
+                           ))}
                         </Card>
                      </motion.div>
                   )}
