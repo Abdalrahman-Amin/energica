@@ -10,8 +10,11 @@ import { usePathname, useRouter } from "next/navigation";
 // import clsx from "clsx";
 import useCategoryStore from "@/store/useCategoryStore";
 import FloatingContactButton from "./FloatingContactButton";
-import { ScrollableButton } from "./ScrollableButton";
+import ScrollableButton from "./ScrollableButton";
 // import { FaWhatsapp } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 function Navbar() {
    // const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
@@ -169,20 +172,27 @@ function Navbar() {
    if (pathname.includes("/admin")) return null;
 
    return (
-      <header className="fixed top-0 w-full z-50 bg-white shadow-md xl:px-80 lg:px-40 md:px-20">
-         {/* First Row: Logo, Search Bar, and Contact Info */}
-         <div className="flex flex-row items-center justify-between px-4  py-2">
-            {/* Logo */}
-            <Link href="/" className="w-24 md:w-36">
-               <Image
-                  height={100}
-                  src={logo}
-                  alt="logo"
-                  className="cursor-pointer hover:scale-110 transition-transform"
-               />
-            </Link>
+      <motion.header
+         initial={{ y: -100 }}
+         animate={{ y: 0 }}
+         className="fixed top-0 w-full z-50 bg-white xl:px-80 lg:px-40 md:px-20"
+      >
+         {/* First Row */}
+         <div className="flex flex-row items-center justify-between px-4 py-2">
+            <motion.div
+               whileHover={{ scale: 1.1 }}
+               transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+               <Link href="/" className="w-24 md:w-36">
+                  <Image
+                     height={100}
+                     src={logo}
+                     alt="logo"
+                     className="cursor-pointer"
+                  />
+               </Link>
+            </motion.div>
 
-            {/* Search Bar */}
             <div
                className="relative flex items-center w-full max-w-md md:max-w-lg my-3 md:my-0 mx-2"
                ref={searchRef}
@@ -192,91 +202,56 @@ function Navbar() {
                   alt="search"
                   className="absolute left-3 w-4 md:w-5 text-gray-400"
                />
-               <input
+               <Input
                   value={searchQuery}
-                  onChange={handleSearchInputChange}
+                  onChange={(e) => {
+                     handleSearchInputChange(e);
+                     setIsSearchOpen(true);
+                  }}
                   placeholder="Search ..."
-                  type="text"
-                  className="py-1 md:py-2 pl-8 md:pl-10 pr-4 w-full rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm md:text-base"
+                  className="pl-8 md:pl-10 pr-4"
                />
-               {isSearchOpen ? (
-                  <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 max-h-60 overflow-y-auto">
-                     {searchResults.categories.map((category) => (
-                        <div
-                           key={category.id}
-                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                           onClick={() =>
-                              handleSearchResultClick(category.id, "category")
-                           }
-                        >
-                           {category.title}
-                        </div>
-                     ))}
-                     {searchResults.models.map((model) => (
-                        <div
-                           key={model.id}
-                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                           onClick={() =>
-                              handleSearchResultClick(model.id, "model")
-                           }
-                        >
-                           {model.title}
-                        </div>
-                     ))}
-                     {searchResults.products.map((product) => (
-                        <div
-                           key={product.id}
-                           className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                           onClick={() =>
-                              handleSearchResultClick(product.id, "product")
-                           }
-                        >
-                           {`${product.title} ${product.rating_value} ${product.rating_unit}`}
-                        </div>
-                     ))}
-                  </div>
-               ) : null}
+
+               <AnimatePresence>
+                  {isSearchOpen && (
+                     <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full left-0 w-full mt-1 z-10"
+                     >
+                        <Card className="max-h-60 overflow-y-auto">
+                           {searchResults.categories.map((category) => (
+                              <motion.div
+                                 key={category.id}
+                                 whileHover={{
+                                    backgroundColor: "rgb(243 244 246)",
+                                 }}
+                                 className="px-4 py-2 cursor-pointer"
+                                 onClick={() =>
+                                    handleSearchResultClick(
+                                       category.id,
+                                       "category"
+                                    )
+                                 }
+                              >
+                                 {category.title}
+                              </motion.div>
+                           ))}
+                           {/* Similar mapping for models and products */}
+                        </Card>
+                     </motion.div>
+                  )}
+               </AnimatePresence>
             </div>
 
-            {/* Contact Info (Visible on Mobile and Desktop) */}
             <div className="flex items-center gap-2">
-               {/* WhatsApp Contact */}
-               {/* <div className="flex items-center gap-1 md:gap-2 bg-blue-50 px-1 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-blue-100 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
-                  <FaWhatsapp className="h-3 w-3 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <a
-                     className="text-gray-700 font-medium text-[0.7rem] md:text-base hover:text-blue-600 transition-colors duration-200"
-                     href="https://wa.me/+2001066651786"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                  >
-                     01066651786
-                  </a>
-               </div> */}
-
-               {/* Floating Contact Button */}
                <FloatingContactButton />
             </div>
          </div>
 
-         {/* Second Row: Toggle Button and Navigation Buttons */}
-         <div className="flex items-center justify-between px-4 md:px-8 lg:px-32 py-2 bg-white shadow-md">
-            {/* Mobile Menu Button */}
-            {/* <button
-               onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
-               aria-expanded={isNavMenuOpen}
-               aria-label="Toggle navigation menu"
-               className="md:hidden w-8 h-8 bg-blue-50 rounded-lg hover:bg-blue-100 flex items-center justify-center"
-            >
-               {isNavMenuOpen ? (
-                  <FaXmark size={20} className="text-blue-600" />
-               ) : (
-                  <FaBars size={20} className="text-blue-600" />
-               )}
-            </button> */}
-
-            {/* Navigation Buttons - Always Visible & Compact */}
-            {/* Parent container with grid layout */}
-            {/* Parent container with grid for mobile and flex for desktop */}
+         {/* Second Row */}
+         <motion.div className="flex items-center justify-between px-4 md:px-8 lg:px-32 py-2 bg-white shadow-md">
             <div className="grid grid-cols-4 gap-1.5 w-full md:grid-cols-none md:flex md:flex-row">
                {categories.map((category) => (
                   <ScrollableButton
@@ -287,10 +262,8 @@ function Navbar() {
                   />
                ))}
             </div>
-         </div>
-
-         {/* Mobile Menu (Dropdown) */}
-      </header>
+         </motion.div>
+      </motion.header>
    );
 }
 

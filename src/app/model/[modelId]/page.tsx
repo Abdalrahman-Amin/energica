@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Category, Model, Product } from "@/types/types";
-import Loader from "@/components/Loader";
+import Loader from "@/components/ui/Loader";
 
 const ModelsProducts = () => {
    const { modelId } = useParams();

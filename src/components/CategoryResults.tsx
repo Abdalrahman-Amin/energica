@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import Loader from "@/components/Loader";
+import Loader from "@/components/ui/Loader";
 import { Category } from "@/types/types";
 
 interface CategoryResultsProps {

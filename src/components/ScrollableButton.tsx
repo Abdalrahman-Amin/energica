@@ -1,50 +1,76 @@
 import React, { useEffect, useRef, useState } from "react";
+import { motion, useAnimationControls } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ScrollableButtonProps {
    title: string;
    isActive: boolean;
    onClick: () => void;
 }
-export const ScrollableButton: React.FC<ScrollableButtonProps> = ({
+
+const ScrollableButton = ({
    title,
    isActive,
    onClick,
-}) => {
-   const buttonRef = useRef<HTMLButtonElement>(null);
-   const textRef = useRef<HTMLElement>(null);
+}: ScrollableButtonProps) => {
+   const containerRef = useRef<HTMLDivElement>(null);
+   const textRef = useRef<HTMLDivElement>(null);
    const [shouldScroll, setShouldScroll] = useState(false);
+   const controls = useAnimationControls();
 
    useEffect(() => {
-      if (buttonRef.current && textRef.current) {
-         const buttonWidth = buttonRef.current.clientWidth;
+      if (containerRef.current && textRef.current) {
+         const containerWidth = containerRef.current.clientWidth;
          const textWidth = textRef.current.scrollWidth;
-         setShouldScroll(textWidth > buttonWidth); // Only scroll if text is wider than the button
+         const hasOverflow = textWidth > containerWidth;
+         setShouldScroll(hasOverflow);
+
+         if (hasOverflow && isActive && shouldScroll) {
+            const distance = textWidth - containerWidth;
+            controls.start({
+               x: [0, -distance - 4],
+               transition: {
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  ease: "linear",
+                  repeatDelay: 0.5,
+               },
+            });
+         } else {
+            controls.stop();
+            controls.set({ x: 0 });
+         }
       }
-   }, [title, isActive]);
+   }, [title, isActive, controls, shouldScroll]);
 
    return (
-      <button
-         ref={buttonRef}
+      <Button
          onClick={onClick}
-         className={`
-        whitespace-nowrap px-2 py-1 text-xs rounded-md font-medium transition-all duration-200
-        relative overflow-hidden truncate md:px-3 md:py-1.5 md:text-sm md:rounded-lg md:flex-1
-        ${
-           isActive
-              ? "bg-blue-500 text-white hover:bg-blue-600"
-              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-        }
-      `}
+         variant={isActive ? "default" : "secondary"}
+         className={cn(
+            "relative overflow-hidden whitespace-nowrap px-2 py-1 text-xs md:px-3 md:py-1.5 md:text-sm md:flex-1",
+            "transition-all duration-200",
+            shouldScroll && "group" // Add group class for hover state handling
+         )}
          title={title}
       >
-         <span
-            ref={textRef}
-            className={`inline-block ${
-               isActive && shouldScroll ? "animate-marquee" : ""
-            }`}
-         >
-            {title}
-         </span>
-      </button>
+         <div ref={containerRef} className="overflow-hidden">
+            <motion.div
+               ref={textRef}
+               animate={controls}
+               className={cn(
+                  "inline-block",
+                  // Only apply hover pause when scrolling is active
+                  shouldScroll && "group-hover:[animation-play-state:paused]"
+               )}
+            >
+               {title}
+            </motion.div>
+         </div>
+      </Button>
    );
 };
+
+export default ScrollableButton;
