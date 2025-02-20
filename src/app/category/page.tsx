@@ -247,9 +247,11 @@ const AllCategoriesPage = () => {
                               Model
                            </label>
                            <Select
-                              value={selectedModel || ""}
+                              value={selectedModel || "all"}
                               onValueChange={(value) =>
-                                 setSelectedModel(value || null)
+                                 setSelectedModel(
+                                    value === "all" ? null : value
+                                 )
                               }
                            >
                               <SelectTrigger>
