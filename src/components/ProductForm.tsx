@@ -54,10 +54,6 @@ const AddProductForm = ({
          const { data: categoriesData, error: categoriesError } = await supabase
             .from("categories")
             .select("*");
-         console.log(
-            "DEBUG: ~ fetchCategoriesAndModels ~ categoriesData:",
-            categoriesData
-         );
 
          const { data: modelsData, error: modelsError } = await supabase
             .from("models")
@@ -65,10 +61,6 @@ const AddProductForm = ({
 
          const { data: categoryModelsData, error: categoryModelsError } =
             await supabase.from("category_models").select("*");
-         console.log(
-            "DEBUG: ~ fetchCategoriesAndModels ~ categoryModelsData:",
-            categoryModelsData
-         );
 
          if (categoriesError)
             console.error("Error fetching categories:", categoriesError);
@@ -89,10 +81,6 @@ const AddProductForm = ({
 
    useEffect(() => {
       if (selectedCategory) {
-         console.log(
-            "DEBUG: ~ useEffect ~ selectedCategory:",
-            selectedCategory
-         );
          // Filter models based on selected category
          const filteredCategoryModels: Category_Models[] =
             categoryModels.filter((item) => {
@@ -101,11 +89,6 @@ const AddProductForm = ({
          const modelIds: number[] = filteredCategoryModels.map(
             (item) => item.model_id
          );
-         console.log(
-            "DEBUG: ~ filteredCategoryModels ~ filteredCategoryModels:",
-            filteredCategoryModels
-         );
-
          const filtered = models.filter((model) => modelIds.includes(model.id));
          setFilteredModels(filtered);
       } else {
@@ -147,7 +130,7 @@ const AddProductForm = ({
 
          if (selectedProduct) {
             // Update existing product
-            const { data, error } = await supabase
+            const { error } = await supabase
                .from("products")
                .update({
                   title,
@@ -163,10 +146,9 @@ const AddProductForm = ({
                .select();
 
             if (error) throw error;
-            console.log("DEBUG: ~ handleSubmit ~ data:", data);
             alert("Product updated successfully!");
          } else {
-            const { data, error } = await supabase
+            const { error } = await supabase
                .from("products")
                .insert([
                   {
@@ -181,7 +163,6 @@ const AddProductForm = ({
                   },
                ])
                .select();
-            console.log("DEBUG: ~ handleSubmit ~ data:", data);
 
             if (error) throw error;
 

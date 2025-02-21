@@ -12,7 +12,7 @@ import ModelsResults from "./ModelResults";
 import ProductsResults from "./ProductsResults";
 import { Category, Model, Product } from "@/types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const AdminDashboard = () => {
    const categoryFormRef = useRef<HTMLDivElement>(null);
@@ -28,8 +28,6 @@ const AdminDashboard = () => {
    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
    const supabase = createClientComponentClient();
    const router = useRouter();
-   const pathname = usePathname();
-   console.log("DEBUG: ~ AdminDashboard ~ pathname:", pathname);
 
    const handleScrollTo = (formId: string) => {
       const formRefs: {

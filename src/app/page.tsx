@@ -94,7 +94,7 @@ export default function Home() {
 
    return (
       <motion.main
-         className="mt-52 min-h-screen px-4"
+         className="mt-52 min-h-screen "
          variants={containerVariants}
          initial="hidden"
          animate="show"

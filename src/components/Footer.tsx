@@ -1,14 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import useCategoryStore from "@/store/useCategoryStore";
 import { usePathname } from "next/navigation";
 import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 
 const Footer = () => {
-   const { categories } = useCategoryStore();
    const pathName = usePathname();
 
    if (pathName.includes("admin")) return null;
@@ -74,7 +71,7 @@ const Footer = () => {
          <div className="container mx-auto px-4">
             <motion.div
                variants={containerVariants}
-               className="grid grid-cols-1 md:grid-cols-4 gap-8"
+               className="grid grid-cols-1 md:grid-cols-2 gap-8"
             >
                {/* About Section */}
                <motion.div variants={itemVariants} className="space-y-4">
@@ -97,49 +94,8 @@ const Footer = () => {
                   </motion.p>
                </motion.div>
 
-               {/* Quick Links Section */}
-               <motion.div variants={itemVariants} className="space-y-4">
-                  <motion.h3
-                     variants={itemVariants}
-                     className="text-xl font-bold relative inline-block"
-                  >
-                     Quick Links
-                     <motion.div
-                        className="absolute -bottom-1 left-0 h-0.5 bg-purple-500"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: "100%" }}
-                        transition={{ duration: 0.3, delay: 0.2 }}
-                     />
-                  </motion.h3>
-                  <motion.ul
-                     //  variants={containerVariants}
-                     className="space-y-2"
-                  >
-                     {categories.map((category) => (
-                        <motion.li
-                           key={category.id}
-                           // variants={itemVariants}
-                           whileHover={{ x: 5 }}
-                        >
-                           <Button
-                              variant="link"
-                              asChild
-                              className="text-gray-400 hover:text-white p-0 h-auto font-normal"
-                           >
-                              <a href={`/category#category-${category.id}`}>
-                                 {category.title}
-                              </a>
-                           </Button>
-                        </motion.li>
-                     ))}
-                  </motion.ul>
-               </motion.div>
-
                {/* Contact Section */}
-               <motion.div
-                  variants={itemVariants}
-                  className="space-y-4 md:col-span-2"
-               >
+               <motion.div variants={itemVariants} className="space-y-4 ">
                   <motion.h3
                      variants={itemVariants}
                      className="text-xl font-bold relative inline-block"
