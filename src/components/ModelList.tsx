@@ -46,7 +46,7 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
          transition={{ duration: 0.6, ease: "easeOut" }}
-         className="relative px-4"
+         className="relative"
       >
          {/* Background Gradient */}
          <div className="absolute inset-x-0 h-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-50/50 via-blue-100/20 to-blue-50/50 blur-2xl -z-10" />
@@ -54,7 +54,7 @@ const ModelList: React.FC<ModelListProps> = ({ models, categorySlug }) => {
          {/* Scrollable Cards */}
          <div
             ref={containerRef}
-            className="models flex overflow-x-auto gap-4 py-8 px-2 hide-scrollbar scroll-smooth 
+            className="models flex overflow-x-auto gap-4 py-8  hide-scrollbar scroll-smooth 
           [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
          >
             {models.map((model) => (

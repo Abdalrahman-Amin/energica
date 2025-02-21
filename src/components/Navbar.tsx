@@ -59,10 +59,6 @@ function Navbar() {
    //    );
    // };
 
-   useEffect(() => {
-      console.log("DEBUG-----------------------", activeSection);
-   }, [activeSection]);
-
    const handleSearch = async (query: string) => {
       if (query.length > 0) {
          await fetchSearchResults(query);
@@ -120,10 +116,8 @@ function Navbar() {
 
    // Scroll to category section
    const handleCategoryClick = (categoryId: number) => {
-      console.log("DEBUG: ~ handleCategoryClick ~ categoryId:", categoryId);
       const section = document.getElementById(`category-${categoryId}`);
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
-      console.log("DEBUG: ~ handleCategoryClick ~ navbarHeight:", navbarHeight);
 
       if (section) {
          window.scrollTo({
