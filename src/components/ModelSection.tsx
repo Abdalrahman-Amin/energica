@@ -12,6 +12,8 @@ import {
    ChevronRight,
    Download,
    MessageCircle,
+   ChevronDown,
+   ChevronUp,
 } from "lucide-react";
 
 export const ModelSection = ({
@@ -26,6 +28,11 @@ export const ModelSection = ({
    const containerRef = useRef<HTMLDivElement>(null);
    const [canScrollLeft, setCanScrollLeft] = useState(false);
    const [canScrollRight, setCanScrollRight] = useState(false);
+   const [isExpanded, setIsExpanded] = useState(false);
+
+   const ITEMS_PER_ROW = 4;
+   const INITIAL_ROWS = 2;
+   const initialVisibleItems = ITEMS_PER_ROW * INITIAL_ROWS;
 
    const checkOverflow = () => {
       const container = containerRef.current;
@@ -56,6 +63,99 @@ export const ModelSection = ({
       return () => window.removeEventListener("resize", checkOverflow);
    }, []);
 
+   const visibleProducts = isExpanded
+      ? products
+      : products.slice(0, initialVisibleItems);
+
+   const ProductCard = ({
+      product,
+      index,
+   }: {
+      product: Product;
+      index: number;
+   }) => (
+      <motion.div
+         key={product.id}
+         initial={{ opacity: 0, y: 20 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ delay: index * 0.1 }}
+         className="w-[280px]"
+      >
+         <Card className="h-full transition-all duration-300 hover:shadow-lg">
+            <div className="relative h-48 overflow-hidden bg-gray-50">
+               <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+               >
+                  <a
+                     href={product.image}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="block h-full w-full"
+                  >
+                     <Image
+                        src={product.image}
+                        alt={product.title}
+                        width={280}
+                        height={192}
+                        className="w-full h-full object-cover"
+                     />
+                  </a>
+               </motion.div>
+               {product.rating_value && (
+                  <Badge
+                     variant="secondary"
+                     className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm ring-1 ring-black/10"
+                  >
+                     {product.rating_value} {product.rating_unit}
+                  </Badge>
+               )}
+            </div>
+
+            <CardContent className="p-4 space-y-3">
+               <div className="space-y-1.5">
+                  <h4 className="font-semibold text-gray-900 leading-tight">
+                     {product.title}
+                  </h4>
+                  <p className="text-xs text-gray-600 line-clamp-2">
+                     {product.description}
+                  </p>
+               </div>
+
+               <div className="flex gap-2">
+                  <Button
+                     onClick={() => handleWhatsAppClick({ product })}
+                     className="flex-1"
+                     variant="default"
+                     size="sm"
+                  >
+                     <MessageCircle className="w-4 h-4 mr-1.5" />
+                     WhatsApp
+                  </Button>
+
+                  {product.data_sheet && (
+                     <Button
+                        asChild
+                        className="flex-1"
+                        variant="secondary"
+                        size="sm"
+                     >
+                        <a
+                           href={product.data_sheet}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                        >
+                           <Download className="w-4 h-4 mr-1.5" />
+                           Data Sheet
+                        </a>
+                     </Button>
+                  )}
+               </div>
+            </CardContent>
+         </Card>
+      </motion.div>
+   );
+
    return (
       <motion.div
          initial={{ opacity: 0, y: 20 }}
@@ -83,136 +183,101 @@ export const ModelSection = ({
                className="absolute inset-x-0 h-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-50/50 via-blue-100/20 to-blue-50/50 blur-2xl -z-10"
             />
 
-            <div
-               ref={containerRef}
-               className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 hide-scrollbar scroll-smooth 
-              [scrollbar-width:none] [-ms-overflow-style:none] 
-              [&::-webkit-scrollbar]:hidden"
-               onScroll={checkOverflow}
-            >
+            {/* Mobile View */}
+            <div className="block xl:hidden">
+               <div
+                  ref={containerRef}
+                  className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 hide-scrollbar scroll-smooth 
+                  [scrollbar-width:none] [-ms-overflow-style:none] 
+                  [&::-webkit-scrollbar]:hidden"
+                  onScroll={checkOverflow}
+               >
+                  <AnimatePresence>
+                     {products.map((product, index) => (
+                        <motion.div
+                           key={product.id}
+                           initial={{ opacity: 0, x: 20 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: index * 0.1 }}
+                           className="flex-shrink-0 w-[280px]"
+                        >
+                           <ProductCard product={product} index={index} />
+                        </motion.div>
+                     ))}
+                  </AnimatePresence>
+               </div>
+
                <AnimatePresence>
-                  {products.map((product, index) => (
+                  {canScrollLeft && (
                      <motion.div
-                        key={product.id}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex-shrink-0 w-[280px]"
+                        exit={{ opacity: 0, x: -10 }}
                      >
-                        <Card className="h-full transition-all duration-300 hover:shadow-lg">
-                           <div className="relative h-48 overflow-hidden bg-gray-50">
-                              <motion.div
-                                 whileHover={{ scale: 1.05 }}
-                                 transition={{ duration: 0.3 }}
-                              >
-                                 <a
-                                    href={product.image}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block h-full w-full"
-                                 >
-                                    <Image
-                                       src={product.image}
-                                       alt={product.title}
-                                       width={280}
-                                       height={192}
-                                       className="w-full h-full object-cover"
-                                    />
-                                 </a>
-                              </motion.div>
-                              {product.rating_value && (
-                                 <Badge
-                                    variant="secondary"
-                                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm"
-                                 >
-                                    {product.rating_value} {product.rating_unit}
-                                 </Badge>
-                              )}
-                           </div>
-
-                           <CardContent className="p-4 space-y-3">
-                              <div className="space-y-1.5">
-                                 <h4 className="font-semibold text-gray-900 leading-tight">
-                                    {product.title}
-                                 </h4>
-                                 <p className="text-xs text-gray-600 line-clamp-2">
-                                    {product.description}
-                                 </p>
-                              </div>
-
-                              <div className="flex gap-2">
-                                 <Button
-                                    onClick={() =>
-                                       handleWhatsAppClick({ product })
-                                    }
-                                    className="flex-1"
-                                    variant="default"
-                                    size="sm"
-                                 >
-                                    <MessageCircle className="w-4 h-4 mr-1.5" />
-                                    WhatsApp
-                                 </Button>
-
-                                 {product.data_sheet && (
-                                    <Button
-                                       asChild
-                                       className="flex-1"
-                                       variant="secondary"
-                                       size="sm"
-                                    >
-                                       <a
-                                          href={product.data_sheet}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                       >
-                                          <Download className="w-4 h-4 mr-1.5" />
-                                          Data Sheet
-                                       </a>
-                                    </Button>
-                                 )}
-                              </div>
-                           </CardContent>
-                        </Card>
+                        <Button
+                           onClick={scrollLeft}
+                           variant="outline"
+                           size="icon"
+                           className="absolute -left-2 top-1/2 -translate-y-1/2 rounded-full w-10 h-10"
+                        >
+                           <ChevronLeft className="w-4 h-4" />
+                        </Button>
                      </motion.div>
-                  ))}
+                  )}
+
+                  {canScrollRight && (
+                     <motion.div
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                     >
+                        <Button
+                           onClick={scrollRight}
+                           variant="outline"
+                           size="icon"
+                           className="absolute -right-2 top-1/2 -translate-y-1/2 rounded-full w-10 h-10"
+                        >
+                           <ChevronRight className="w-4 h-4" />
+                        </Button>
+                     </motion.div>
+                  )}
                </AnimatePresence>
             </div>
 
-            <AnimatePresence>
-               {canScrollLeft && (
-                  <motion.div
-                     initial={{ opacity: 0, x: -10 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     exit={{ opacity: 0, x: -10 }}
-                  >
-                     <Button
-                        onClick={scrollLeft}
-                        variant="outline"
-                        size="icon"
-                        className="absolute -left-2 top-1/2 -translate-y-1/2 rounded-full w-10 h-10"
-                     >
-                        <ChevronLeft className="w-4 h-4" />
-                     </Button>
-                  </motion.div>
-               )}
+            {/* Desktop View */}
+            <div className="hidden xl:block">
+               <div className="grid grid-cols-4 gap-4">
+                  <AnimatePresence>
+                     {visibleProducts.map((product, index) => (
+                        <ProductCard
+                           key={product.id}
+                           product={product}
+                           index={index}
+                        />
+                     ))}
+                  </AnimatePresence>
+               </div>
 
-               {canScrollRight && (
-                  <motion.div
-                     initial={{ opacity: 0, x: 10 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     exit={{ opacity: 0, x: 10 }}
-                  >
+               {products.length > initialVisibleItems && (
+                  <div className="mt-6 text-center">
                      <Button
-                        onClick={scrollRight}
+                        onClick={() => setIsExpanded(!isExpanded)}
                         variant="outline"
-                        size="icon"
-                        className="absolute -right-2 top-1/2 -translate-y-1/2 rounded-full w-10 h-10"
+                        className="gap-2"
                      >
-                        <ChevronRight className="w-4 h-4" />
+                        {isExpanded ? (
+                           <>
+                              See Less <ChevronUp className="w-4 h-4" />
+                           </>
+                        ) : (
+                           <>
+                              See More <ChevronDown className="w-4 h-4" />
+                           </>
+                        )}
                      </Button>
-                  </motion.div>
+                  </div>
                )}
-            </AnimatePresence>
+            </div>
          </div>
       </motion.div>
    );
