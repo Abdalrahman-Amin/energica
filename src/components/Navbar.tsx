@@ -169,10 +169,10 @@ function Navbar() {
       <motion.header
          initial={{ y: -100 }}
          animate={{ y: 0 }}
-         className="fixed top-0 w-full z-50 bg-white lg:px-40 md:px-20"
+         className="fixed top-0 w-full z-50 bg-white "
       >
          {/* First Row */}
-         <div className="flex flex-row items-center justify-between px-4 py-2">
+         <div className="flex flex-row items-center justify-between px-4 md:px-8 lg:px-32 py-2">
             <motion.div
                whileHover={{ scale: 1.1 }}
                transition={{ type: "spring", stiffness: 400, damping: 10 }}
