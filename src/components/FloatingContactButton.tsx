@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaWhatsapp, FaPhone, FaCommentDots } from "react-icons/fa";
 import { FaEnvelope, FaXmark } from "react-icons/fa6";
@@ -14,7 +14,9 @@ import {
 const FloatingContactButton = () => {
    const [isOpen, setIsOpen] = useState(false);
 
-   const toggleContactDetails = () => setIsOpen(!isOpen);
+   const toggleContactDetails = () => {
+      setIsOpen((prev) => !prev);
+   };
 
    const buttonVariants = {
       initial: { scale: 0.8, rotate: -180 },
@@ -45,9 +47,24 @@ const FloatingContactButton = () => {
          delay: 0.3,
       },
    ];
+   const listRef = useRef<HTMLDivElement>(null);
+
+   const handleClickOutside = (event: MouseEvent) => {
+      if (listRef.current && !listRef.current.contains(event.target as Node)) {
+         console.log("DEBUG: ~ here");
+         setIsOpen(false);
+      }
+   };
+
+   useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, []);
 
    return (
-      <div className="relative z-50">
+      <div className="relative z-50" ref={listRef}>
          <TooltipProvider>
             <Tooltip>
                <TooltipTrigger asChild>
