@@ -171,123 +171,128 @@ function Navbar() {
          animate={{ y: 0 }}
          className="fixed top-0 w-full z-50 bg-white "
       >
-         {/* First Row */}
-         <div className="flex flex-row items-center justify-between px-4 md:px-8 lg:px-32 py-2">
-            <motion.div
-               whileHover={{ scale: 1.1 }}
-               transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-               <Link href="/" className="w-24 md:w-36">
+         <div className="container mx-auto  ">
+            {/* First Row */}
+            <div className="flex flex-row items-center justify-between  py-2">
+               <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+               >
+                  <Link href="/" className="w-24 md:w-36">
+                     <Image
+                        height={100}
+                        src={logo}
+                        alt="logo"
+                        className="cursor-pointer"
+                     />
+                  </Link>
+               </motion.div>
+
+               <div
+                  className="relative flex items-center w-full max-w-md md:max-w-lg my-3 md:my-0 mx-2"
+                  ref={searchRef}
+               >
                   <Image
-                     height={100}
-                     src={logo}
-                     alt="logo"
-                     className="cursor-pointer"
+                     src={searchIcon}
+                     alt="search"
+                     className="absolute left-3 w-4 md:w-5 text-gray-400"
                   />
-               </Link>
+                  <Input
+                     value={searchQuery}
+                     onChange={(e) => {
+                        handleSearchInputChange(e);
+                        setIsSearchOpen(true);
+                     }}
+                     placeholder="Search ..."
+                     className="pl-8 md:pl-10 pr-4"
+                  />
+
+                  <AnimatePresence>
+                     {isSearchOpen && (
+                        <motion.div
+                           initial={{ opacity: 0, y: -10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           exit={{ opacity: 0, y: -10 }}
+                           className="absolute top-full left-0 w-full mt-1 z-10"
+                        >
+                           <Card className="max-h-60 overflow-y-auto">
+                              {searchResults.categories.map((category) => (
+                                 <motion.div
+                                    key={category.id}
+                                    whileHover={{
+                                       backgroundColor: "rgb(243 244 246)",
+                                    }}
+                                    className="px-4 py-2 cursor-pointer"
+                                    onClick={() =>
+                                       handleSearchResultClick(
+                                          category.id,
+                                          "category"
+                                       )
+                                    }
+                                 >
+                                    {category.title}
+                                 </motion.div>
+                              ))}
+                              {/* Similar mapping for models and products */}
+                              {searchResults.models.map((model) => (
+                                 <motion.div
+                                    key={model.id}
+                                    whileHover={{
+                                       backgroundColor: "rgb(243 244 246)",
+                                    }}
+                                    className="px-4 py-2 cursor-pointer"
+                                    onClick={() =>
+                                       handleSearchResultClick(
+                                          model.id,
+                                          "model"
+                                       )
+                                    }
+                                 >
+                                    {model.title}
+                                 </motion.div>
+                              ))}
+                              {searchResults.products.map((product) => (
+                                 <motion.div
+                                    key={product.id}
+                                    whileHover={{
+                                       backgroundColor: "rgb(243 244 246)",
+                                    }}
+                                    className="px-4 py-2 cursor-pointer"
+                                    onClick={() =>
+                                       handleSearchResultClick(
+                                          product.id,
+                                          "product"
+                                       )
+                                    }
+                                 >
+                                    {`${product.title} ${product.rating_value} ${product.rating_unit}`}
+                                 </motion.div>
+                              ))}
+                           </Card>
+                        </motion.div>
+                     )}
+                  </AnimatePresence>
+               </div>
+
+               <div className="flex items-center gap-2">
+                  <FloatingContactButton />
+               </div>
+            </div>
+
+            {/* Second Row */}
+            <motion.div className="flex items-center justify-between px-4 md:px-8 lg:px-32 py-2 bg-white shadow-md">
+               <div className="grid grid-cols-4 gap-1.5 w-full md:grid-cols-none md:flex md:flex-row">
+                  {categories.map((category) => (
+                     <ScrollableButton
+                        key={category.title}
+                        title={category.title}
+                        isActive={String(activeSection) === String(category.id)}
+                        onClick={() => handleCategoryClick(category.id)}
+                     />
+                  ))}
+               </div>
             </motion.div>
-
-            <div
-               className="relative flex items-center w-full max-w-md md:max-w-lg my-3 md:my-0 mx-2"
-               ref={searchRef}
-            >
-               <Image
-                  src={searchIcon}
-                  alt="search"
-                  className="absolute left-3 w-4 md:w-5 text-gray-400"
-               />
-               <Input
-                  value={searchQuery}
-                  onChange={(e) => {
-                     handleSearchInputChange(e);
-                     setIsSearchOpen(true);
-                  }}
-                  placeholder="Search ..."
-                  className="pl-8 md:pl-10 pr-4"
-               />
-
-               <AnimatePresence>
-                  {isSearchOpen && (
-                     <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 w-full mt-1 z-10"
-                     >
-                        <Card className="max-h-60 overflow-y-auto">
-                           {searchResults.categories.map((category) => (
-                              <motion.div
-                                 key={category.id}
-                                 whileHover={{
-                                    backgroundColor: "rgb(243 244 246)",
-                                 }}
-                                 className="px-4 py-2 cursor-pointer"
-                                 onClick={() =>
-                                    handleSearchResultClick(
-                                       category.id,
-                                       "category"
-                                    )
-                                 }
-                              >
-                                 {category.title}
-                              </motion.div>
-                           ))}
-                           {/* Similar mapping for models and products */}
-                           {searchResults.models.map((model) => (
-                              <motion.div
-                                 key={model.id}
-                                 whileHover={{
-                                    backgroundColor: "rgb(243 244 246)",
-                                 }}
-                                 className="px-4 py-2 cursor-pointer"
-                                 onClick={() =>
-                                    handleSearchResultClick(model.id, "model")
-                                 }
-                              >
-                                 {model.title}
-                              </motion.div>
-                           ))}
-                           {searchResults.products.map((product) => (
-                              <motion.div
-                                 key={product.id}
-                                 whileHover={{
-                                    backgroundColor: "rgb(243 244 246)",
-                                 }}
-                                 className="px-4 py-2 cursor-pointer"
-                                 onClick={() =>
-                                    handleSearchResultClick(
-                                       product.id,
-                                       "product"
-                                    )
-                                 }
-                              >
-                                 {`${product.title} ${product.rating_value} ${product.rating_unit}`}
-                              </motion.div>
-                           ))}
-                        </Card>
-                     </motion.div>
-                  )}
-               </AnimatePresence>
-            </div>
-
-            <div className="flex items-center gap-2">
-               <FloatingContactButton />
-            </div>
          </div>
-
-         {/* Second Row */}
-         <motion.div className="flex items-center justify-between px-4 md:px-8 lg:px-32 py-2 bg-white shadow-md">
-            <div className="grid grid-cols-4 gap-1.5 w-full md:grid-cols-none md:flex md:flex-row">
-               {categories.map((category) => (
-                  <ScrollableButton
-                     key={category.title}
-                     title={category.title}
-                     isActive={String(activeSection) === String(category.id)}
-                     onClick={() => handleCategoryClick(category.id)}
-                  />
-               ))}
-            </div>
-         </motion.div>
       </motion.header>
    );
 }
